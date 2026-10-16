@@ -5,19 +5,68 @@ import {
   ScenarioContext,
   DetectedObject,
 } from '../types';
+import { MockSignRecognizerService } from './recognizerCore';
+import { ForcedOutcome, RecognizerRequest, RecognizerResponse } from './recognizerProtocol';
 
-export type ForcedOutcome = 'auto' | 'correct' | 'almost' | 'try_again' | 'low_confidence' | 'camera_lost';
+export type { ForcedOutcome } from './recognizerProtocol';
+
+interface PendingRequest {
+  request: RecognizerRequest;
+  resolve: (response: RecognizerResponse) => void;
+}
 
 /**
- * PROTOTYPE: MockSignRecognizer
- * In production, this interface is backed by a Web Worker executing an on-device
- * MediaPipe Hands / Holistic pipeline with a lightweight transformer or MLP model
- * classifying normalized 3D hand/pose landmarks without streaming video off-device.
+ * PROTOTYPE: Main-thread bridge to the recognition worker.
+ *
+ * The mock recognizer runs inside `recognizer.worker.ts` so the main thread is
+ * never blocked (see spec 5.5). If Web Workers are unavailable (SSR, tests,
+ * older browsers) or the worker dies, every call transparently falls back to an
+ * in-process `MockSignRecognizerService` so callers never break. A real
+ * landmark-based classifier replaces the service without changing this API.
  */
-class MockSignRecognizerService implements SignRecognizer {
+class WorkerSignRecognizerBridge implements SignRecognizer {
+  private readonly fallback = new MockSignRecognizerService();
+  private readonly pending = new Map<number, PendingRequest>();
+  private worker: Worker | null;
+  private sequence = 0;
   private forcedOutcome: ForcedOutcome = 'auto';
 
-  public setForcedOutcome(outcome: ForcedOutcome) {
+  constructor() {
+    this.worker = this.createWorker();
+  }
+
+  private createWorker(): Worker | null {
+    if (typeof Worker === 'undefined') return null;
+    try {
+      const worker = new Worker(new URL('./recognizer.worker.ts', import.meta.url), { type: 'module' });
+      worker.onmessage = (event: MessageEvent<RecognizerResponse>) => {
+        const response = event.data;
+        const pending = this.pending.get(response.id);
+        if (!pending) return;
+        this.pending.delete(response.id);
+        pending.resolve(response);
+      };
+      worker.onerror = () => this.handleWorkerFailure();
+      return worker;
+    } catch {
+      return null;
+    }
+  }
+
+  private handleWorkerFailure(): void {
+    console.warn('[Talinturo] Recognition worker unavailable; falling back to in-process mock.');
+    if (this.worker) {
+      this.worker.terminate();
+      this.worker = null;
+    }
+    const pending = Array.from(this.pending.values());
+    this.pending.clear();
+    pending.forEach(({ request, resolve }) => {
+      void this.runFallback(request).then(resolve);
+    });
+  }
+
+  public setForcedOutcome(outcome: ForcedOutcome): void {
     this.forcedOutcome = outcome;
   }
 
@@ -25,117 +74,47 @@ class MockSignRecognizerService implements SignRecognizer {
     return this.forcedOutcome;
   }
 
+  private dispatch(request: RecognizerRequest): Promise<RecognizerResponse> {
+    const worker = this.worker;
+    if (!worker) return this.runFallback(request);
+    return new Promise<RecognizerResponse>((resolve) => {
+      this.pending.set(request.id, { request, resolve });
+      worker.postMessage(request);
+    });
+  }
+
+  private async runFallback(request: RecognizerRequest): Promise<RecognizerResponse> {
+    if (request.type === 'classify') {
+      this.fallback.setForcedOutcome(request.forcedOutcome);
+      const result = await this.fallback.classify(request.frame, request.target, request.ctx);
+      return { id: request.id, type: 'classify', result };
+    }
+    const result = await this.fallback.detectObjects(request.frame);
+    return { id: request.id, type: 'detectObjects', result };
+  }
+
   public async classify(
-    _frame: ImageBitmap | null,
+    frame: ImageBitmap | null,
     target: SignTarget,
     ctx: ScenarioContext
   ): Promise<SignAssessment> {
-    // Simulate lightweight classification delay (180ms)
-    await new Promise((resolve) => setTimeout(resolve, 180));
-
-    const outcome = this.forcedOutcome;
-
-    if (outcome === 'camera_lost') {
-      return {
-        recognized: false,
-        confidence: 0.1,
-        inContext: false,
-        parameters: {
-          handshape: { score: 0.1, hint: 'Camera view was interrupted. Switched to self-check mode.' },
-          movement: { score: 0.1 },
-          location: { score: 0.1 },
-          palmOrientation: { score: 0.1 },
-          nonManual: { score: 0.1 },
-        },
-      };
-    }
-
-    if (outcome === 'low_confidence') {
-      return {
-        recognized: false,
-        confidence: 0.42, // Below 0.6 threshold
-        inContext: true,
-        parameters: {
-          handshape: { score: 0.45, hint: 'Hands were partially obscured. Bring hands fully into the guide frame.' },
-          movement: { score: 0.4 },
-          location: { score: 0.5 },
-          palmOrientation: { score: 0.4 },
-          nonManual: { score: 0.6 },
-        },
-      };
-    }
-
-    if (outcome === 'almost') {
-      return {
-        recognized: false,
-        confidence: 0.78,
-        inContext: true,
-        parameters: {
-          handshape: { score: 0.88, hint: 'Hand shape is crisp and well formed.' },
-          movement: { score: 0.82 },
-          location: { score: 0.85 },
-          palmOrientation: { score: 0.55, hint: 'Almost there! Try turning your palm inward toward your chest.' },
-          nonManual: { score: 0.85 },
-        },
-      };
-    }
-
-    if (outcome === 'try_again') {
-      return {
-        recognized: false,
-        confidence: 0.65,
-        inContext: true,
-        parameters: {
-          handshape: { score: 0.6, hint: 'Keep trying! Focus on keeping your fingertips together.' },
-          movement: { score: 0.62, hint: 'Slow down the forward arc slightly.' },
-          location: { score: 0.7 },
-          palmOrientation: { score: 0.68 },
-          nonManual: { score: 0.7 },
-        },
-      };
-    }
-
-    if (outcome === 'correct') {
-      return {
-        recognized: true,
-        confidence: 0.94,
-        inContext: true,
-        parameters: {
-          handshape: { score: 0.95, hint: 'Great handshape clarity!' },
-          movement: { score: 0.92, hint: 'Smooth, natural signing movement.' },
-          location: { score: 0.93 },
-          palmOrientation: { score: 0.96 },
-          nonManual: { score: 0.9 },
-        },
-      };
-    }
-
-    // Default 'auto' mode: deterministic high success with realistic variations
-    const isExpected = target.id === ctx.expectedSignId;
-    const confidence = isExpected ? 0.91 : 0.68;
-
-    return {
-      recognized: isExpected,
-      confidence,
-      inContext: isExpected,
-      parameters: {
-        handshape: { score: isExpected ? 0.94 : 0.7, hint: isExpected ? 'Crisp finger alignment.' : 'Check finger spread.' },
-        movement: { score: isExpected ? 0.9 : 0.65, hint: isExpected ? 'Fluent tempo.' : 'Try a smoother wave.' },
-        location: { score: 0.92 },
-        palmOrientation: { score: isExpected ? 0.93 : 0.72 },
-        nonManual: { score: 0.88 },
-      },
-    };
+    const response = await this.dispatch({
+      id: ++this.sequence,
+      type: 'classify',
+      target,
+      ctx,
+      forcedOutcome: this.forcedOutcome,
+      frame,
+    });
+    if (response.type === 'classify') return response.result;
+    throw new Error(response.type === 'error' ? response.message : 'Unexpected recognizer response');
   }
 
-  public async detectObjects(_frame: ImageBitmap | null): Promise<DetectedObject[]> {
-    // PROTOTYPE: Mocked on-device object bounding box recognizer for scenario prompts
-    return [
-      { label: 'cup', confidence: 0.92 },
-      { label: 'plate', confidence: 0.88 },
-    ];
+  public async detectObjects(frame: ImageBitmap | null): Promise<DetectedObject[]> {
+    const response = await this.dispatch({ id: ++this.sequence, type: 'detectObjects', frame });
+    if (response.type === 'detectObjects') return response.result;
+    throw new Error(response.type === 'error' ? response.message : 'Unexpected recognizer response');
   }
 }
 
-export const mockSignRecognizer = new MockSignRecognizerService();
-
+export const mockSignRecognizer = new WorkerSignRecognizerBridge();

@@ -20,6 +20,30 @@ describe('Adaptive Difficulty Engine', () => {
     expect(acc).toBe(0.8);
   });
 
+  it('returns zero accuracy when there are no attempts', () => {
+    const record = {
+      signId: 'kumusta',
+      attempts: 0,
+      correct: 0,
+      accuracy: 0,
+      lastPracticed: 0,
+      parameterScores: {},
+    };
+    expect(calculateWeightedAccuracy(record)).toBe(0);
+  });
+
+  it('clamps accuracy to 1 when correct exceeds attempts', () => {
+    const record = {
+      signId: 'kumusta',
+      attempts: 5,
+      correct: 10,
+      accuracy: 2,
+      lastPracticed: Date.now(),
+      parameterScores: {},
+    };
+    expect(calculateWeightedAccuracy(record)).toBe(1);
+  });
+
   it('determines spaced repetition due status correctly', () => {
     const now = 1000000000;
     const recentRecord = {
@@ -91,4 +115,3 @@ describe('Adaptive Difficulty Engine', () => {
     expect(rec.hintsCount).toBe(1);
   });
 });
-

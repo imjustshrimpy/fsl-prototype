@@ -42,9 +42,9 @@ export const ProgressPage: React.FC = () => {
   return (
     <div className="space-y-6 pb-24 max-w-2xl mx-auto">
       {/* Page Title */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-title-adaptive font-black text-text-primary">
+          <h2 className="text-title-adaptive font-black text-text-primary tracking-tight">
             {role === 'educator'
               ? t('progress.educatorTab')
               : role === 'family'
@@ -52,12 +52,12 @@ export const ProgressPage: React.FC = () => {
               : t('progress.learnerTab')}
           </h2>
           <p className="text-body-adaptive text-text-secondary">
-            Viewing metrics for: <span className="font-bold text-brand-blue uppercase">{role}</span>
+            Viewing metrics for: <span className="font-bold text-brand-blue uppercase tracking-tighter">{role}</span>
           </p>
         </div>
 
         {role === 'educator' && (
-          <Button variant="secondary" onClick={handleExportCsv} className="text-caption-adaptive">
+          <Button variant="secondary" onClick={handleExportCsv} className="text-caption-adaptive shadow-low">
             <Download className="w-4 h-4" aria-hidden="true" />
             <span>{t('progress.exportCsv')}</span>
           </Button>
@@ -80,19 +80,19 @@ export const ProgressPage: React.FC = () => {
         <div className="space-y-5">
           {/* Class Summary KPIs */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-surface-card p-4 rounded-card border-adaptive">
+            <div className="bg-surface-card pad-adaptive-control rounded-card border-adaptive shadow-low">
               <div className="text-caption-adaptive text-text-secondary">Enrolled Students</div>
               <div className="text-title-adaptive font-bold text-text-primary">8</div>
             </div>
-            <div className="bg-surface-card p-4 rounded-card border-adaptive">
+            <div className="bg-surface-card pad-adaptive-control rounded-card border-adaptive shadow-low">
               <div className="text-caption-adaptive text-text-secondary">Avg Accuracy</div>
               <div className="text-title-adaptive font-bold text-brand-blue">81%</div>
             </div>
-            <div className="bg-surface-card p-4 rounded-card border-adaptive">
+            <div className="bg-surface-card pad-adaptive-control rounded-card border-adaptive shadow-low">
               <div className="text-caption-adaptive text-text-secondary">Scenarios Completed</div>
               <div className="text-title-adaptive font-bold text-brand-green">26</div>
             </div>
-            <div className="bg-surface-card p-4 rounded-card border-adaptive">
+            <div className="bg-surface-card pad-adaptive-control rounded-card border-adaptive shadow-low">
               <div className="text-caption-adaptive text-text-secondary">Active Today</div>
               <div className="text-title-adaptive font-bold text-brand-orange">5</div>
             </div>
@@ -149,7 +149,7 @@ export const ProgressPage: React.FC = () => {
          ======================================================== */}
       {role === 'family' && (
         <div className="space-y-4">
-          <Card className="bg-brand-yellow/15 border-brand-yellow p-5 space-y-3">
+          <Card className="bg-brand-yellow/15 border-brand-yellow pad-adaptive-control space-y-3">
             <div className="flex items-center gap-3">
               <div className="w-14 h-14 rounded-full bg-brand-yellow text-on-brand-yellow flex items-center justify-center text-3xl">
                 👦
@@ -227,20 +227,27 @@ export const ProgressPage: React.FC = () => {
 
             {/* Visual Bar Chart */}
             {!showDataTable ? (
-              <div className="space-y-2 pt-2" aria-hidden="true">
-                <div className="flex items-end justify-between gap-1.5 h-36 p-2 bg-surface-app rounded-control border-adaptive">
+              <div className="space-y-4 pt-2" aria-hidden="true">
+                <div className="flex items-end justify-between gap-1.5 h-40 p-4 bg-surface-app rounded-control border-adaptive">
                   {accuracyData.map((d) => (
-                    <div key={d.day} className="flex-1 flex flex-col items-center h-full justify-end">
+                    <div key={d.day} className="flex-1 flex flex-col items-center h-full justify-end group">
                       <div
-                        className="w-full bg-brand-blue rounded-t-sm transition-all"
+                        className="w-full bg-brand-blue rounded-t-sm transition-all duration-base group-hover:bg-brand-orange"
                         style={{ height: `${d.acc}%` }}
                         title={`${d.day}: ${d.acc}%`}
                       />
-                      <span className="text-micro text-text-secondary mt-1 tracking-tighter truncate w-full text-center">
+                      <span className="text-micro font-bold text-text-primary mt-1.5 tracking-tighter truncate w-full text-center">
+                        {d.acc}%
+                      </span>
+                      <span className="text-[10px] text-text-secondary mt-0.5 tracking-tighter truncate w-full text-center">
                         {d.day.replace('Day ', 'D')}
                       </span>
                     </div>
                   ))}
+                </div>
+                <div className="flex justify-between text-caption-adaptive text-text-secondary">
+                  <span>Day 1</span>
+                  <span>Day 10</span>
                 </div>
               </div>
             ) : (
@@ -283,8 +290,8 @@ export const ProgressPage: React.FC = () => {
                   className={`p-3.5 rounded-card border-adaptive text-center flex flex-col items-center justify-between transition ${
                     b.unlocked
                       ? isKids
-                        ? 'bg-brand-yellow text-on-brand-yellow shadow-sm'
-                        : 'bg-surface-card text-text-primary shadow-sm'
+                        ? 'bg-brand-yellow text-on-brand-yellow shadow-low hover:shadow-mid'
+                        : 'bg-surface-card text-text-primary shadow-low hover:shadow-mid'
                       : 'bg-surface-app opacity-60'
                   }`}
                 >

@@ -20,22 +20,25 @@ export const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-surface-app text-text-primary flex flex-col antialiased selection:bg-brand-yellow selection:text-text-primary">
       {/* Top Header Bar */}
-      <header className="sticky top-0 z-30 bg-surface-card border-b border-adaptive px-4 py-2.5 flex items-center justify-between gap-3 shadow-sm backdrop-blur-md">
+      <header className="sticky top-0 z-30 bg-surface-card border-b border-adaptive px-4 py-3 flex items-center justify-between gap-3 shadow-low">
         <div className="flex items-center gap-2.5">
-          <div
-            className={`w-9 h-9 rounded-avatar flex items-center justify-center font-black text-xl shadow-sm ${
-              isKids ? 'bg-brand-yellow text-on-brand-yellow' : 'bg-brand-blue text-on-brand-blue'
-            }`}
+          {/* Brand Mark */}
+          <svg
+            className={`w-9 h-9 shrink-0 ${isKids ? 'text-brand-pink fill-current' : 'text-brand-blue fill-current'}`}
+            viewBox="0 0 32 32"
+            aria-hidden="true"
           >
-            🐦
-          </div>
+            <path
+              d="M16 2c-3.5 0-6.5 2.5-7.5 6 0 1.1 0.5 2.1 1.2 2.8l2.2-2.2c0.6-0.6 1.6-0.6 2.2 0l2.2 2.2c0.6 0.6 0.6 1.6 0 2.2l-2.2 2.2c-0.6 0.6-1.6 0.6-2.2 0l-1.1-1.1c-0.8-0.7-1.3-1.8-1.3-2.8 0-3.5 3-6.5 6.5-6.5 3.5 0 6.5 3 6.5 6.5s-3 6.5-6.5 6.5-6.5-3-6.5-6.5c0-1 0.5-2.1 1.3-2.8l1.1 1.1c0.6 0.6 1.6 0.6 2.2 0l2.2-2.2c0.6-0.6 1.6-0.6 2.2 0l2.2 2.2c0.6 0.6 1.2-1.7 1.2-2.8C22.5 4.5 19.5 2 16 2"
+              fill="currentColor"
+            />
+            <circle cx="16" cy="16" r="4" fill="currentColor" />
+          </svg>
           <div>
-            <h1 className="font-extrabold text-body-adaptive leading-tight tracking-tight">
+            <h1 className={`font-extrabold text-title-adaptive leading-tight tracking-tight ${isKids ? 'text-brand-pink' : 'text-text-primary'}`}>
               Talinturo
             </h1>
-            <p className="text-micro text-text-secondary hidden sm:block">
-              {t('app.tagline')}
-            </p>
+            <p className="text-micro text-text-secondary hidden sm:block">{t('app.tagline')}</p>
           </div>
         </div>
 

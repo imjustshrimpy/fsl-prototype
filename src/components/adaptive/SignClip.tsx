@@ -72,7 +72,7 @@ export const SignClip: React.FC<SignClipProps> = ({
 
   if (!sign) {
     return (
-      <div className="p-4 bg-error-surface text-on-error-surface rounded-card border-adaptive">
+      <div className="pad-adaptive-control bg-error-surface text-on-error-surface rounded-card border-adaptive">
         Sign clip "{clipId}" not found in manifest.
       </div>
     );
@@ -96,7 +96,7 @@ export const SignClip: React.FC<SignClipProps> = ({
           {/* Flat-vector Signer Avatar */}
           <svg
             viewBox="0 0 240 240"
-            className="w-48 h-48 drop-shadow-sm transition-transform"
+            className="w-48 h-48 drop-shadow-low transition-transform"
             aria-label={`Sign demonstration animation for ${sign.gloss}`}
           >
             {/* Background aura */}
@@ -151,13 +151,13 @@ export const SignClip: React.FC<SignClipProps> = ({
 
           {/* Kids Friendly Character Badge */}
           {isKids && (
-            <div className="absolute top-3 left-3 bg-brand-pink text-on-brand-pink px-3 py-1 rounded-pill font-bold text-caption-adaptive shadow-sm border border-mode">
+            <div className="absolute top-3 left-3 bg-brand-pink text-on-brand-pink px-3 py-1 rounded-pill font-bold text-caption-adaptive shadow-low border border-adaptive">
               ⭐ Kuya Signer
             </div>
           )}
 
           {/* Offline / Cache Indicator */}
-          <div className="absolute top-3 right-3 bg-surface-card text-text-secondary px-2.5 py-1 rounded-pill text-caption-adaptive border-adaptive shadow-sm flex items-center gap-1.5">
+          <div className="absolute top-3 right-3 bg-surface-card text-text-secondary px-2.5 py-1 rounded-pill text-caption-adaptive border-adaptive shadow-low flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-brand-green" aria-hidden="true"></span>
             <span>{t('player.offline')}</span>
           </div>
@@ -235,7 +235,7 @@ export const SignClip: React.FC<SignClipProps> = ({
         </div>
 
         {/* Speed Selector Buttons */}
-        <div className="flex items-center gap-1 bg-surface-app p-1 rounded-control border-adaptive">
+        <div className="flex items-center gap-1 bg-surface-app p-1 rounded-control border-adaptive shadow-low">
           {[0.5, 0.75, 1.0].map((s) => (
             <button
               key={s}
@@ -243,7 +243,7 @@ export const SignClip: React.FC<SignClipProps> = ({
               aria-label={`${t('player.speed')}: ${s}x`}
               className={`min-h-touch px-2.5 py-1 text-caption-adaptive rounded-control font-bold transition cursor-pointer ${
                 speed === s
-                  ? 'bg-brand-blue text-on-brand-blue shadow-sm'
+                  ? 'bg-brand-blue text-on-brand-blue shadow-low'
                   : 'text-text-secondary hover:text-text-primary'
               }`}
             >
@@ -266,7 +266,7 @@ export const SignClip: React.FC<SignClipProps> = ({
                 onClick={() => setActiveParamTab(param)}
                 className={`py-1.5 px-2 text-caption-adaptive rounded-control font-medium transition text-center cursor-pointer ${
                   activeParamTab === param
-                    ? 'bg-surface-card text-text-primary font-bold shadow-sm border border-brand-blue'
+                    ? 'bg-surface-card text-text-primary font-bold shadow-low border border-brand-blue'
                     : 'text-text-secondary hover:bg-surface-card'
                 }`}
               >

@@ -32,7 +32,7 @@ export const FeedbackUI: React.FC<FeedbackUIProps> = ({
     <div className={`flex flex-col gap-4 ${className}`}>
       {/* Primary Visual Banner (Non-judgmental tone, never 'Wrong' or 'Failed') */}
       <div
-        className={`p-4 rounded-control border-adaptive flex items-start gap-3 shadow-sm ${
+        className={`pad-adaptive-control rounded-control border-adaptive flex items-start gap-3 shadow-low ${
           isRecognized
             ? 'bg-success-surface text-on-success-surface border-success'
             : 'bg-warning-surface text-on-warning-surface border-warning'

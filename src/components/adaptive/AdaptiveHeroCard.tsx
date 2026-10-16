@@ -23,7 +23,7 @@ export const AdaptiveHeroCard: React.FC<AdaptiveHeroCardProps> = ({
   if (isKids) {
     return (
       <div
-        className={`bg-brand-yellow text-on-brand-yellow rounded-card border-adaptive p-6 flex flex-col sm:flex-row items-center gap-5 shadow-sm transition-all duration-base ${className}`}
+        className={`bg-brand-yellow text-on-brand-yellow rounded-card border-adaptive pad-adaptive-control flex flex-col sm:flex-row items-center gap-5 shadow-low transition-all duration-base ${className}`}
       >
         <Avatar
           label="Friendly guide companion"
@@ -60,7 +60,7 @@ export const AdaptiveHeroCard: React.FC<AdaptiveHeroCardProps> = ({
 
   return (
     <div
-      className={`bg-surface-card text-text-primary rounded-card border-adaptive p-5 shadow-sm transition-all duration-base ${className}`}
+      className={`bg-surface-card text-text-primary rounded-card border-adaptive pad-adaptive-control shadow-low transition-all duration-base ${className}`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex-1">

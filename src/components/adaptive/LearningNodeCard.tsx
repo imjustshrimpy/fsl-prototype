@@ -3,14 +3,8 @@ import { useAgeMode } from '../../context/AgeModeContext';
 import { useTranslation } from '../../i18n';
 import { SignData } from '../../types';
 import { withFeedback } from '../../lib/feedback';
-import {
-  CheckCircle2,
-  Lock,
-  ChevronRight,
-  Clock,
-  Sparkles,
-  RefreshCw,
-} from 'lucide-react';
+import { StatusBadge } from '../primitives/StatusBadge';
+import { Lock, ChevronRight } from 'lucide-react';
 
 export type NodeStatus = 'completed' | 'in-progress' | 'locked' | 'needs-review' | 'default';
 
@@ -42,38 +36,7 @@ export const LearningNodeCard: React.FC<LearningNodeCardProps> = ({
     withFeedback(() => onClick(sign), 'click', accessibility.hapticsEnabled, accessibility.optionalSoundEffects)();
   };
 
-  const statusBadge = {
-    completed: (
-      <span className="inline-flex items-center gap-1 text-caption-adaptive bg-success-surface text-on-success-surface px-2.5 py-0.5 rounded-pill font-bold border border-success">
-        <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
-        <span>{t('common.completed')}</span>
-      </span>
-    ),
-    'in-progress': (
-      <span className="inline-flex items-center gap-1 text-caption-adaptive bg-info-surface text-on-info-surface px-2.5 py-0.5 rounded-pill font-bold border border-info">
-        <Clock className="w-3.5 h-3.5" aria-hidden="true" />
-        <span>{t('common.inProgress')}</span>
-      </span>
-    ),
-    locked: (
-      <span className="inline-flex items-center gap-1 text-caption-adaptive bg-surface-app text-text-secondary px-2.5 py-0.5 rounded-pill font-bold border-adaptive">
-        <Lock className="w-3.5 h-3.5" aria-hidden="true" />
-        <span>{t('common.locked')}</span>
-      </span>
-    ),
-    'needs-review': (
-      <span className="inline-flex items-center gap-1 text-caption-adaptive bg-warning-surface text-on-warning-surface px-2.5 py-0.5 rounded-pill font-bold border border-warning">
-        <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
-        <span>{t('common.needsReview')}</span>
-      </span>
-    ),
-    default: (
-      <span className="inline-flex items-center gap-1 text-caption-adaptive bg-surface-app text-text-secondary px-2.5 py-0.5 rounded-pill font-bold border-adaptive">
-        <Sparkles className="w-3.5 h-3.5 text-brand-blue" aria-hidden="true" />
-        <span>Ready</span>
-      </span>
-    ),
-  }[status];
+  const statusBadge = <StatusBadge variant={status} className="shrink-0" />;
 
   if (isKids) {
     return (
@@ -81,11 +44,11 @@ export const LearningNodeCard: React.FC<LearningNodeCardProps> = ({
         onClick={handleClick}
         disabled={isLocked}
         aria-label={`${sign.gloss} - ${status}. ${isLocked ? unlockRequirement : ''}`}
-        className={`w-full min-h-node text-left bg-surface-card rounded-card border-adaptive p-4 shadow-sm flex items-center gap-4 transition-all duration-base cursor-pointer focus-ring-adaptive disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
+        className={`w-full min-h-node text-left bg-surface-card rounded-card border-adaptive pad-adaptive-control shadow-low flex items-center gap-4 transition-all duration-base cursor-pointer focus-ring-adaptive disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
       >
         {/* Large Kids Avatar Badge */}
         <div
-          className={`w-14 h-14 rounded-avatar flex items-center justify-center shrink-0 border border-mode text-2xl ${
+          className={`w-14 h-14 rounded-avatar flex items-center justify-center shrink-0 border border-adaptive text-2xl ${
             isLocked
               ? 'bg-surface-app text-text-secondary'
               : status === 'completed'
@@ -128,7 +91,7 @@ export const LearningNodeCard: React.FC<LearningNodeCardProps> = ({
       onClick={handleClick}
       disabled={isLocked}
       aria-label={`${sign.gloss} - ${status}. ${isLocked ? unlockRequirement : ''}`}
-      className={`w-full min-h-node text-left bg-surface-card rounded-card border-adaptive px-4 py-3 shadow-sm flex items-center justify-between gap-4 transition-all duration-base cursor-pointer focus-ring-adaptive hover:translate-y-[-2px] disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`w-full min-h-node text-left bg-surface-card rounded-card border-adaptive pad-adaptive-control shadow-low flex items-center justify-between gap-4 transition-all duration-base cursor-pointer focus-ring-adaptive hover:translate-y-[-2px] disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     >
       <div className="flex items-center gap-3 min-w-0">
         <div

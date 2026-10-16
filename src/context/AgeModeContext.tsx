@@ -81,7 +81,10 @@ export const AgeModeProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       const saved = localStorage.getItem('talinturo.accessibility');
       if (saved) {
-        return { ...DEFAULT_ACCESSIBILITY, ...JSON.parse(saved) };
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object' && 'captions' in parsed) {
+          return { ...DEFAULT_ACCESSIBILITY, ...parsed };
+        }
       }
     } catch (e) {}
     return DEFAULT_ACCESSIBILITY;

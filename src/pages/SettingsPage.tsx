@@ -44,7 +44,7 @@ export const SettingsPage: React.FC = () => {
           <ModeToggle />
         </div>
 
-        <div className="border-t border-adaptive pt-4 flex items-center justify-between flex-wrap gap-2">
+        <div className="border-t border-adaptive pt-3 flex items-center justify-between flex-wrap gap-2">
           <div>
             <div className="font-bold text-body-adaptive text-text-primary">
               {t('settings.roleLabel')}
@@ -57,7 +57,7 @@ export const SettingsPage: React.FC = () => {
         </div>
 
         {/* Language Selection */}
-        <div className="border-t border-adaptive pt-4 flex items-center justify-between flex-wrap gap-2">
+        <div className="border-t border-adaptive pt-3 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <Languages className="w-5 h-5 text-brand-blue" aria-hidden="true" />
             <div>

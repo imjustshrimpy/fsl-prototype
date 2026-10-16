@@ -36,7 +36,7 @@ export const ModeToggle: React.FC = () => {
           aria-label="Switch to Kids Mode"
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-caption-adaptive font-bold transition cursor-pointer ${
             isKids
-              ? 'bg-brand-yellow text-on-brand-yellow shadow-sm'
+              ? 'bg-brand-yellow text-on-brand-yellow shadow-low'
               : 'text-text-secondary hover:text-text-primary'
           }`}
         >
@@ -56,7 +56,7 @@ export const ModeToggle: React.FC = () => {
           aria-label="Switch to Adult Mode"
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-caption-adaptive font-bold transition cursor-pointer ${
             !isKids
-              ? 'bg-brand-blue text-on-brand-blue shadow-sm'
+              ? 'bg-brand-blue text-on-brand-blue shadow-low'
               : 'text-text-secondary hover:text-text-primary'
           }`}
         >

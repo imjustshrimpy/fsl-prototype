@@ -12,16 +12,13 @@ export interface AdaptiveInput {
 }
 
 /**
- * Computes the weighted rolling accuracy.
- * Recent attempts carry 70% weight, older baseline carries 30%.
+ * Calculates the accuracy ratio for a sign record.
+ * Returns correct / attempts, clamped to [0, 1].
+ * Returns 0 when there are no attempts.
  */
 export function calculateWeightedAccuracy(record: AdaptiveSignRecord): number {
   if (record.attempts === 0) return 0;
-  const rawRatio = record.correct / record.attempts;
-  // If only 1 attempt, return raw ratio
-  if (record.attempts === 1) return rawRatio;
-  // Weighted blend
-  return Math.min(1, Math.max(0, rawRatio));
+  return Math.min(1, Math.max(0, record.correct / record.attempts));
 }
 
 /**

@@ -74,6 +74,13 @@ export const filPH = {
     selfCheckDesc: 'Panoorin ang senyas nang mabuti, gayahin ito sa salamin o screen, at piliin ang iyong pagtatasa.',
     selfCheckRateMatch: 'Nakuha ko nang tama!',
     selfCheckRateAlmost: 'Nagsasanay pa ako.',
+    tryAgainBtn: 'Subukan Muli ang Kamera',
+    checkingSign: 'Sinusuri ang Senyas...',
+    checkMySign: 'Suriin ang Iyong Senyas',
+    devTest: 'Pagsusuri ng Developer',
+    lHand: 'Kaliwa',
+    rHand: 'Kanan',
+    keepInFrame: 'Itakda ang itaas ng katawan at kamay sa loob ng frame.',
   },
   feedback: {
     recognized: 'Malinaw ang iyong senyas! Mahusay ang posisyon ng kamay.',

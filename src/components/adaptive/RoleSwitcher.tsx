@@ -15,7 +15,7 @@ export const RoleSwitcher: React.FC = () => {
   ];
 
   return (
-    <div className="flex items-center gap-1 bg-surface-card p-1 rounded-pill border-adaptive shadow-sm">
+    <div className="flex items-center gap-1 bg-surface-card p-1 rounded-pill border-adaptive shadow-low">
       {roles.map((r) => {
         const isActive = role === r.id;
         return (
@@ -26,7 +26,7 @@ export const RoleSwitcher: React.FC = () => {
             aria-label={`Role: ${r.label}`}
             className={`flex items-center gap-1 px-2.5 py-1 rounded-pill text-caption-adaptive font-bold transition cursor-pointer ${
               isActive
-                ? 'bg-brand-blue text-on-brand-blue shadow-sm'
+                ? 'bg-brand-blue text-on-brand-blue shadow-low'
                 : 'text-text-secondary hover:text-text-primary'
             }`}
           >

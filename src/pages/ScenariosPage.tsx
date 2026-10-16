@@ -35,20 +35,14 @@ export const ScenariosPage: React.FC = () => {
       ? MOCK_SCENARIOS
       : MOCK_SCENARIOS.filter((s: Scenario) => s.category === activeCategory);
 
-  const getCategoryIcon = (cat: string) => {
-    switch (cat) {
-      case 'household':
-        return <Home className="w-4 h-4" aria-hidden="true" />;
-      case 'school':
-        return <GraduationCap className="w-4 h-4" aria-hidden="true" />;
-      case 'public':
-        return <Users className="w-4 h-4" aria-hidden="true" />;
-      case 'emergency':
-        return <ShieldAlert className="w-4 h-4 text-brand-orange" aria-hidden="true" />;
-      default:
-        return <Compass className="w-4 h-4" aria-hidden="true" />;
-    }
+  const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+    household: <Home className="w-4 h-4" aria-hidden="true" />,
+    school: <GraduationCap className="w-4 h-4" aria-hidden="true" />,
+    public: <Users className="w-4 h-4" aria-hidden="true" />,
+    emergency: <ShieldAlert className="w-4 h-4 text-brand-orange" aria-hidden="true" />,
   };
+
+  const getCategoryIcon = (cat: string) => CATEGORY_ICONS[cat] ?? <Compass className="w-4 h-4" aria-hidden="true" />;
 
   const handleStepComplete = () => {
     if (!selectedScenario) return;
@@ -113,7 +107,7 @@ export const ScenariosPage: React.FC = () => {
         {/* Scenario Completion Summary */}
         {isScenarioFinished ? (
           <div className="bg-surface-card rounded-card border-adaptive p-6 text-center space-y-5 shadow-lg">
-            <div className="w-20 h-20 rounded-full bg-brand-green text-on-brand-green mx-auto flex items-center justify-center text-3xl shadow-sm">
+            <div className="w-20 h-20 rounded-full bg-brand-green text-on-brand-green mx-auto flex items-center justify-center text-3xl shadow-low">
               <CheckCircle2 className="w-10 h-10" />
             </div>
 
@@ -127,7 +121,7 @@ export const ScenariosPage: React.FC = () => {
             </div>
 
             {/* Turn-by-turn recap */}
-            <div className="bg-surface-app p-4 rounded-card border-adaptive text-left space-y-3">
+            <div className="bg-surface-app pad-adaptive-control rounded-card border-adaptive text-left space-y-3">
               <div className="text-caption-adaptive font-bold text-text-secondary uppercase tracking-wider">
                 Turn-by-Turn Dialogue Recap
               </div>
@@ -179,7 +173,7 @@ export const ScenariosPage: React.FC = () => {
               </div>
 
               {/* Sign Prompt */}
-              <div className="bg-brand-blue/10 p-3 rounded-control border border-brand-blue/30 flex items-center gap-2 text-body-adaptive font-bold text-brand-blue">
+              <div className="bg-brand-blue/10 pad-adaptive-control rounded-control border border-brand-blue/30 flex items-center gap-3 text-body-adaptive font-bold text-brand-blue shadow-low">
                 <Sparkles className="w-5 h-5 shrink-0" aria-hidden="true" />
                 <span>{currentStep.prompt}</span>
               </div>
@@ -225,7 +219,7 @@ export const ScenariosPage: React.FC = () => {
             onClick={() => setActiveCategory(cat)}
             className={`min-h-touch px-4 py-2 rounded-pill text-caption-adaptive font-bold transition cursor-pointer shrink-0 border-adaptive ${
               activeCategory === cat
-                ? 'bg-brand-blue text-on-brand-blue shadow-sm'
+                ? 'bg-brand-blue text-on-brand-blue shadow-low'
                 : 'bg-surface-card text-text-secondary hover:text-text-primary'
             }`}
           >
@@ -234,7 +228,7 @@ export const ScenariosPage: React.FC = () => {
         ))}
       </div>
 
-      {/* Scenarios Grid */}
+          {/* Scenarios Grid */}
       <div className="grid grid-cols-1 gap-3">
         {filteredScenarios.map((scen: Scenario) => (
           <button
@@ -244,10 +238,10 @@ export const ScenariosPage: React.FC = () => {
               setCurrentStepIndex(0);
               setIsScenarioFinished(false);
             }}
-            className="w-full text-left bg-surface-card rounded-card border-adaptive p-4 shadow-sm flex items-center justify-between gap-4 transition-all duration-base cursor-pointer hover:translate-y-[-2px] focus-ring-adaptive"
+            className="w-full text-left bg-surface-card rounded-card border-adaptive pad-adaptive-control shadow-low transition-all duration-base cursor-pointer hover:shadow-mid hover:-translate-y-0.5 focus-ring-adaptive group"
           >
             <div className="flex items-start gap-3.5 min-w-0">
-              <div className="w-12 h-12 rounded-avatar bg-surface-app border-adaptive flex items-center justify-center shrink-0 text-xl">
+              <div className="w-12 h-12 rounded-avatar bg-surface-app border-adaptive flex items-center justify-center shrink-0 text-xl group-hover:scale-105 transition-transform">
                 {getCategoryIcon(scen.category)}
               </div>
               <div className="min-w-0">
@@ -268,7 +262,7 @@ export const ScenariosPage: React.FC = () => {
               </div>
             </div>
 
-            <ChevronRight className="w-6 h-6 text-text-secondary shrink-0" aria-hidden="true" />
+            <ChevronRight className="w-6 h-6 text-text-secondary shrink-0 group-hover:text-brand-blue transition-colors" aria-hidden="true" />
           </button>
         ))}
       </div>

@@ -60,7 +60,7 @@ export const VisualAlert: React.FC<VisualAlertProps> = ({
     <div
       role={type === 'error' ? 'alert' : 'status'}
       aria-live="polite"
-      className={`rounded-control p-4 flex items-start justify-between gap-3 shadow-md transition-all duration-base ${config.container} ${className}`}
+      className={`rounded-control pad-adaptive-control flex items-start justify-between gap-3 shadow-low transition-all duration-base ${config.container} ${className}`}
     >
       <div className="flex items-start gap-3">
         {config.icon}

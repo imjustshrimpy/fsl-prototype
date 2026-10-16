@@ -26,7 +26,7 @@ export const Avatar: React.FC<AvatarProps> = ({
     <div
       role="img"
       aria-label={label}
-      className={`rounded-avatar flex items-center justify-center shrink-0 border-adaptive shadow-sm transition-all duration-base ${bgColor} ${sizeClass} ${className}`}
+      className={`rounded-avatar flex items-center justify-center shrink-0 border-adaptive shadow-low transition-all duration-base ${bgColor} ${sizeClass} ${className}`}
     >
       <span aria-hidden="true">{emoji}</span>
     </div>

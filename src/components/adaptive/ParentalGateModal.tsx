@@ -73,6 +73,9 @@ export const ParentalGateModal: React.FC<ParentalGateModalProps> = ({
 
         {/* Visual Press-and-Hold Button */}
         <div className="flex flex-col items-center gap-3">
+          {/* PROTOTYPE: press-and-hold parental gate stub (Stage 7). Production:
+              mode is derived from the learner profile and Kids -> Adult is gated
+              by a guardian-set profile setting, not a free client-side gesture. */}
           <button
             onMouseDown={handleStartHold}
             onMouseUp={handleStopHold}

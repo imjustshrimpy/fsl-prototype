@@ -74,6 +74,13 @@ export const enPH = {
     selfCheckDesc: 'Watch the clip carefully, copy the sign in front of a mirror or screen, and check how close you felt.',
     selfCheckRateMatch: 'I matched the sign!',
     selfCheckRateAlmost: 'I am still practicing.',
+    tryAgainBtn: 'Try Camera Again',
+    checkingSign: 'Checking Sign...',
+    checkMySign: 'Check My Sign',
+    devTest: 'Dev Test',
+    lHand: 'L Hand',
+    rHand: 'R Hand',
+    keepInFrame: 'Keep upper body & hands in frame',
   },
   feedback: {
     recognized: 'Clear signing! Great hand positioning.',

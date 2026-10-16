@@ -51,8 +51,10 @@ Per guideline 1.2 and 3.3, color is **never the sole indicator** of state. Every
 | Element | Border / Focus Token | Adjacent Background | Contrast Ratio | Status |
 |---|---|---|---|---|
 | Focus ring | `focus-ring` (`#1B40FF`) | `surface-app` (`#F5F6FA`) | **6.11:1** | PASS (≥ 3:1) |
-| Card Border (Kids) | `border-strong` (`#111827`) | `surface-app` (`#F5F6FA`) | **15.22:1** | PASS (≥ 3:1) |
-| Card Border (Adult) | `border-subtle` (`#9CA3AF`) | `surface-app` (`#F5F6FA`) | **3.05:1** | PASS (≥ 3:1) |
+| Card Border (Kids) | `border-strong` (`#6B7280`) | `surface-app` (`#F5F6FA`) | **4.48:1** | PASS (≥ 3:1) |
+| Card Border (Adult) | `border-subtle` (`#82868F`) | `surface-app` (`#F5F6FA`) | **3.38:1** | PASS (≥ 3:1) |
+
+Both border tokens are locked to clear 3:1 against `surface-app` and `surface-card`: `border-strong` `#6B7280` = 4.48:1 / 4.83:1, `border-subtle` `#82868F` = 3.38:1 / 3.65:1 (see `revision.md` §2).
 
 All 16 evaluated color pairs meet or exceed WCAG AA requirements.
 

@@ -78,8 +78,36 @@ export function withFeedback<T extends (...args: any[]) => any>(
   hapticsEnabled = true,
   soundEnabled = false
 ): (...args: Parameters<T>) => ReturnType<T> {
+  if (!soundEnabled) {
+    return (...args: Parameters<T>) => {
+      feedback.trigger(type, hapticsEnabled, false);
+      return handler(...args);
+    };
+  }
+
+  const AudioCtx =
+    typeof window !== 'undefined' && 'AudioContext' in window
+      ? window.AudioContext
+      : undefined;
   return (...args: Parameters<T>) => {
-    feedback.trigger(type, hapticsEnabled, soundEnabled);
+    feedback.trigger(type, hapticsEnabled, true);
+    if (AudioCtx) {
+      try {
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const freq = type === 'success' ? 587.33 : type === 'click' ? 440 : 330;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.12);
+      } catch {}
+    }
     return handler(...args);
   };
 }

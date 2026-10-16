@@ -47,7 +47,7 @@ export const BottomNavPill: React.FC = () => {
       aria-label="Main Navigation"
       className="fixed bottom-0 left-0 right-0 z-40 p-2 sm:p-3 pointer-events-none flex justify-center"
     >
-      <div className="w-full max-w-lg bg-surface-card border-adaptive rounded-pill shadow-lg p-1.5 flex items-center justify-around pointer-events-auto backdrop-blur-md">
+      <div className="w-full max-w-lg bg-surface-card border-adaptive rounded-pill shadow-high p-1 flex items-center justify-around pointer-events-auto backdrop-blur-md">
         {navItems.map((item) => {
           const isActive = activeTab === item.id;
           return (
@@ -62,27 +62,23 @@ export const BottomNavPill: React.FC = () => {
                 )();
               }}
               aria-current={isActive ? 'page' : undefined}
-              className={`relative flex-1 min-h-nav-item flex flex-col items-center justify-center gap-0.5 rounded-pill transition-colors cursor-pointer focus-ring-adaptive z-10 px-2 ${
-                isActive
-                  ? isKids
-                    ? 'text-on-brand-yellow font-bold'
-                    : 'text-on-brand-blue font-bold'
-                  : 'text-text-secondary hover:text-text-primary'
-              }`}
+              className={`relative flex-1 min-h-nav-item flex flex-col items-center justify-center gap-0.5 rounded-pill transition-all duration-base cursor-pointer focus-ring-adaptive z-10 px-2 py-1.5 ${isActive
+                ? isKids
+                  ? 'text-on-brand-yellow font-bold shadow-low'
+                  : 'text-on-brand-blue font-bold shadow-low'
+                : 'text-text-secondary hover:text-text-primary'}`}
             >
               {/* Sliding active pill indicator */}
               {isActive && (
                 <motion.div
                   layoutId="activeNavPill"
-                  className={`absolute inset-0 rounded-pill -z-10 shadow-sm ${
-                    isKids ? 'bg-brand-yellow' : 'bg-brand-blue'
-                  }`}
+                  className={`absolute inset-0 rounded-pill -z-10 shadow-low transition-all duration-base ${isKids ? 'bg-brand-yellow' : 'bg-brand-blue'}`}
                   transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 />
               )}
 
               {getIcon(item.iconName)}
-              <span className="text-caption-adaptive tracking-tight truncate max-w-full">
+              <span className="text-caption-adaptive tracking-tight truncate max-w-full leading-none">
                 {t(item.labelKey)}
               </span>
             </button>

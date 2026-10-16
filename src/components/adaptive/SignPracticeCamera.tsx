@@ -16,6 +16,15 @@ import {
   Sparkles,
 } from 'lucide-react';
 
+const OUTCOME_LABELS: Record<ForcedOutcome, string> = {
+  auto: 'Auto',
+  correct: 'Correct',
+  almost: 'Almost',
+  try_again: 'Try Again',
+  low_confidence: 'Low Confidence',
+  camera_lost: 'Camera Lost',
+};
+
 export interface SignPracticeCameraProps {
   targetSign: SignData;
   scenarioId?: string;
@@ -135,19 +144,19 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
   // 1. Permission Pre-Prompt Screen
   if (permissionState === 'prompt') {
     return (
-      <div className={`bg-surface-card rounded-card border-adaptive p-6 text-center max-w-md mx-auto shadow-sm ${className}`}>
-        <div className="w-16 h-16 rounded-avatar bg-brand-blue text-on-brand-blue mx-auto flex items-center justify-center text-2xl mb-4">
+      <div className={`bg-surface-card rounded-card border-adaptive p-6 text-center max-w-md mx-auto shadow-mid ${className}`}>
+        <div className="w-16 h-16 rounded-avatar bg-brand-blue text-on-brand-blue mx-auto flex items-center justify-center text-2xl mb-4 shadow-low">
           <Camera className="w-8 h-8" aria-hidden="true" />
         </div>
         <h3 className="text-title-adaptive font-bold text-text-primary mb-2">
           {t('camera.prepromptTitle')}
         </h3>
-        <p className="text-body-adaptive text-text-secondary mb-6">
+        <p className="text-body-adaptive text-text-secondary mb-6 leading-relaxed">
           {t('camera.prepromptDesc')}
         </p>
 
         <div className="flex flex-col gap-3">
-          <Button variant="primary" onClick={startCamera}>
+          <Button variant="primary" onClick={startCamera} className="w-full font-bold shadow-mid">
             <Camera className="w-5 h-5" aria-hidden="true" />
             <span>{t('camera.allowBtn')}</span>
           </Button>
@@ -155,6 +164,7 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
           <Button
             variant="secondary"
             onClick={() => setPermissionState('fallback')}
+            className="w-full font-bold"
           >
             <HelpCircle className="w-5 h-5 text-brand-orange" aria-hidden="true" />
             <span>{t('camera.fallbackBtn')}</span>
@@ -167,7 +177,7 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
   // 2. Self-Check Fallback Mode (No camera or camera denied)
   if (permissionState === 'fallback' || !isCameraActive) {
     return (
-      <div className={`bg-surface-card rounded-card border-adaptive p-5 shadow-sm ${className}`}>
+      <div className={`bg-surface-card rounded-card border-adaptive pad-adaptive-control shadow-mid ${className}`}>
         <div className="flex items-center justify-between border-b border-adaptive pb-3 mb-4">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-brand-orange" aria-hidden="true"></span>
@@ -175,13 +185,13 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
           </div>
           <button
             onClick={() => setPermissionState('prompt')}
-            className="text-caption-adaptive text-brand-blue font-medium underline cursor-pointer"
+            className="text-caption-adaptive text-brand-blue font-medium underline cursor-pointer focus-ring-adaptive"
           >
-            Try Camera Again
+            {t('camera.tryAgainBtn')}
           </button>
         </div>
 
-        <p className="text-body-adaptive text-text-secondary mb-5">
+        <p className="text-body-adaptive text-text-secondary mb-5 leading-relaxed">
           {t('camera.selfCheckDesc')}
         </p>
 
@@ -190,7 +200,7 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
             <Button
               variant="success"
               onClick={() => handleSelfCheckRate(true)}
-              className="py-4"
+              className="py-2 font-bold shadow-low"
             >
               <CheckCircle2 className="w-5 h-5" />
               <span>{t('camera.selfCheckRateMatch')}</span>
@@ -198,7 +208,7 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
             <Button
               variant="warning"
               onClick={() => handleSelfCheckRate(false)}
-              className="py-4"
+              className="py-2 font-bold shadow-low"
             >
               <Sparkles className="w-5 h-5" />
               <span>{t('camera.selfCheckRateAlmost')}</span>
@@ -222,7 +232,7 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
 
   // 3. Active Camera Practice View
   return (
-    <div className={`bg-surface-card rounded-card border-adaptive overflow-hidden flex flex-col shadow-sm ${className}`}>
+    <div className={`bg-surface-card rounded-card border-adaptive overflow-hidden flex flex-col shadow-high ${className}`}>
       {/* Video Viewport Stage */}
       <div className="relative bg-surface-app border-b border-adaptive min-h-sign-video flex items-center justify-center overflow-hidden">
         {/* Mirrored Video Preview */}
@@ -235,18 +245,18 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
         />
 
         {/* Framing Guide (Head-to-waist overlay with hands position area) */}
-        <div className="absolute inset-4 pointer-events-none border-2 border-dashed border-brand-yellow rounded-card flex flex-col items-center justify-between p-3 opacity-80">
+        <div className="absolute inset-4 pointer-events-none border-2 border-dashed border-brand-yellow rounded-card flex flex-col items-center justify-between p-3 opacity-80 shadow-low">
           <div className="w-24 h-28 border-2 border-brand-yellow rounded-pill opacity-60"></div>
           <div className="flex items-center justify-between w-full px-6">
-            <div className="w-14 h-14 border border-brand-yellow rounded-avatar opacity-70 flex items-center justify-center text-caption-adaptive text-brand-yellow font-bold">
-              L Hand
+            <div className="w-14 h-14 border border-brand-yellow rounded-avatar opacity-70 flex items-center justify-center text-caption-adaptive text-brand-yellow font-bold shrink-0">
+              {t('camera.lHand')}
             </div>
-            <div className="w-14 h-14 border border-brand-yellow rounded-avatar opacity-70 flex items-center justify-center text-caption-adaptive text-brand-yellow font-bold">
-              R Hand
+            <div className="w-14 h-14 border border-brand-yellow rounded-avatar opacity-70 flex items-center justify-center text-caption-adaptive text-brand-yellow font-bold shrink-0">
+              {t('camera.rHand')}
             </div>
           </div>
-          <div className="text-caption-adaptive font-bold bg-caption-bg text-caption-text px-3 py-1 rounded-pill">
-            Keep upper body & hands in frame
+          <div className="text-caption-adaptive font-bold bg-caption-bg text-caption-text px-3 py-1.5 rounded-pill shadow-low">
+            {t('camera.keepInFrame')}
           </div>
         </div>
 
@@ -254,7 +264,8 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
         {environmentWarning && (
           <div
             role="status"
-            className="absolute top-3 left-3 right-3 bg-warning-surface text-on-warning-surface p-2.5 rounded-control text-caption-adaptive font-bold border border-warning flex items-center gap-2"
+            aria-live="polite"
+            className="absolute top-3 left-3 right-3 bg-warning-surface text-on-warning-surface p-2.5 rounded-control text-caption-adaptive font-bold border border-warning flex items-center gap-2 shadow-mid"
           >
             <SunMedium className="w-4 h-4 shrink-0" aria-hidden="true" />
             <span>{environmentWarning}</span>
@@ -274,24 +285,18 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
       </div>
 
       {/* Camera Action Toolbar */}
-      <div className="p-4 bg-surface-card flex flex-col gap-3">
+      <div className="pad-adaptive-control bg-surface-card flex flex-col gap-3">
         {!assessment ? (
           <div className="flex items-center justify-between gap-3">
             <Button
               variant="primary"
               onClick={handleCheckSign}
               disabled={isAssessing}
-              className="flex-1 font-bold"
+              className="flex-1 font-bold shadow-mid"
             >
               <Scan className="w-5 h-5" />
-              <span>{isAssessing ? 'Checking Sign...' : 'Check My Sign'}</span>
+              <span>{isAssessing ? t('camera.checkingSign') : t('camera.checkMySign')}</span>
             </Button>
-
-            {onSkip && (
-              <Button variant="ghost" onClick={onSkip}>
-                {t('feedback.skipBtn')}
-              </Button>
-            )}
           </div>
         ) : (
           <FeedbackUI
@@ -304,25 +309,25 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
         )}
 
         {/* Dev Panel to Force Outcomes per Spec 3.2 */}
-        <div className="mt-2 pt-2 border-t border-adaptive flex flex-wrap items-center gap-1.5 text-caption-adaptive">
-          <span className="font-bold text-text-secondary">DEV TEST:</span>
-          {(['auto', 'correct', 'almost', 'try_again', 'low_confidence', 'camera_lost'] as const).map((outcome) => (
-            <button
-              key={outcome}
-              onClick={() => {
-                setDevOutcome(outcome);
-                mockSignRecognizer.setForcedOutcome(outcome);
-              }}
-              className={`px-2 py-0.5 rounded-control text-micro font-bold border-adaptive cursor-pointer ${
-                devOutcome === outcome
-                  ? 'bg-brand-blue text-on-brand-blue'
-                  : 'bg-surface-app text-text-secondary hover:text-text-primary'
-              }`}
-            >
-              {outcome}
-            </button>
-          ))}
-        </div>
+        {import.meta.env.DEV && (
+          <div className="mt-3 pt-3 border-t border-adaptive flex flex-wrap items-center gap-1.5 text-caption-adaptive">
+            <span className="font-bold text-text-secondary">{t('camera.devTest')}</span>
+            {(['auto', 'correct', 'almost', 'try_again', 'low_confidence', 'camera_lost'] as const).map((outcome) => (
+              <button
+                key={outcome}
+                onClick={() => {
+                  setDevOutcome(outcome);
+                  mockSignRecognizer.setForcedOutcome(outcome);
+                }}
+                className={`px-2.5 py-1 rounded-control text-micro font-bold border-adaptive cursor-pointer transition ${devOutcome === outcome
+                  ? 'bg-brand-blue text-on-brand-blue shadow-low'
+                  : 'bg-surface-app text-text-secondary hover:text-text-primary'}`}
+              >
+                {OUTCOME_LABELS[outcome]}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
