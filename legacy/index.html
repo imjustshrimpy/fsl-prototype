@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Talinturo</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Bricolage Grotesque, Figtree, Inter & Fredoka -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700;800&family=Fredoka:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950">
+
+  <!-- TOP CONTROL TOOLBAR (Prototyping Controls & Mode Toggles) -->
+  <header class="bg-slate-950 text-white border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-50 text-xs sm:text-sm">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 font-bold text-base text-amber-400">
+        <span class="text-xl animate-bounceSlow">🐦</span>
+        <span class="tracking-wide font-display text-lg">Talinturo</span>
+        <span class="text-[10px] font-normal px-2 py-0.5 bg-amber-400/20 text-amber-300 rounded-full border border-amber-400/30">FSL Interactive</span>
+      </div>
+      <div class="hidden md:block h-4 w-px bg-slate-800"></div>
+      <span class="hidden md:inline text-slate-400 text-xs">Say it with your hands</span>
+    </div>
+
+    <!-- Controls Group -->
+    <div class="flex items-center gap-2 sm:gap-4 flex-wrap">
+      <!-- Role Switcher -->
+      <div class="bg-slate-900 p-0.5 rounded-lg flex items-center border border-slate-800">
+        <button id="btnRoleLearner" onclick="setRole('learner')" class="px-2 py-1 rounded-md transition text-xs font-medium bg-amber-500 text-slate-950 font-bold">
+          <span>Learner</span>
+        </button>
+        <button id="btnRoleInstructor" onclick="setRole('instructor')" class="px-2 py-1 rounded-md transition text-xs font-medium text-slate-400 hover:text-white">
+          <span>Instructor</span>
+        </button>
+      </div>
+
+      <!-- Onboarding Reset -->
+      <button onclick="resetToOnboarding()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md transition flex items-center gap-1.5 text-xs">
+        <i class="fa-solid fa-rotate-left"></i>
+        <span>Reset Onboarding</span>
+      </button>
+
+      <!-- Viewport Device Switcher -->
+      <div class="bg-slate-800 p-0.5 rounded-lg flex items-center border border-slate-700">
+        <button id="btnViewMobile" onclick="setViewMode('mobile')" class="px-2.5 py-1 rounded-md transition flex items-center gap-1.5 text-xs font-medium bg-rose-500 text-white">
+          <i class="fa-solid fa-mobile-screen"></i>
+          <span>Mobile</span>
+        </button>
+        <button id="btnViewDesktop" onclick="setViewMode('desktop')" class="px-2.5 py-1 rounded-md transition flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-white">
+          <i class="fa-solid fa-desktop"></i>
+          <span>Desktop</span>
+        </button>
+      </div>
+
+      <!-- Age Adaptive Mode Switcher -->
+      <div class="bg-slate-800 p-0.5 rounded-lg flex items-center border border-slate-700">
+        <button id="btnModeKids" onclick="setAgeMode('kids')" class="px-2.5 py-1 rounded-md transition flex items-center gap-1.5 text-xs font-medium bg-amber-400 text-slate-950 font-bold">
+          <span>👶 Kids</span>
+        </button>
+        <button id="btnModeAdult" onclick="setAgeMode('adult')" class="px-2.5 py-1 rounded-md transition flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-white">
+          <span>💼 Adult</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT CONTAINER -->
+  <main id="appViewportContainer" class="flex-1 bg-slate-950 flex items-center justify-center p-0 sm:p-4 md:p-6 overflow-hidden">
+
+    <!-- FRAME WORKSPACE WRAPPER (Adapts between Mobile Frame and Full Desktop) -->
+    <div id="frameWrapper" class="w-full h-full max-w-sm sm:h-[840px] sm:rounded-3xl sm:border-[8px] sm:border-slate-800 sm:shadow-2xl overflow-hidden bg-slate-50 dark:bg-slate-900 transition-all duration-300 relative flex flex-col">
+      
+      <!-- AUDIO VISUAL FEEDBACK POPUP -->
+      <div id="feedbackBanner" class="hidden absolute top-16 left-4 right-4 z-50 p-3 rounded-2xl shadow-2xl border text-center transition-all transform -translate-y-4 opacity-0 font-bold text-xs"></div>
+
+      <!-- ================================================================= -->
+      <!-- SECTION 1: ONBOARDING FLOW WIZARD -->
+      <!-- ================================================================= -->
+      <section id="onboardingSection" class="h-full flex flex-col justify-between bg-gradient-to-b from-amber-50 to-orange-50 dark:from-slate-900 dark:to-slate-950 p-6 overflow-y-auto">
+        <!-- Onboarding Header & Progress -->
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <button onclick="prevOnboardingStep()" id="btnOnboardBack" class="text-slate-400 hover:text-slate-700 text-lg hidden">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="flex-1 mx-4">
+              <div class="h-2 bg-amber-200/60 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div id="onboardingProgressBar" class="h-full bg-amber-500 transition-all duration-300" style="width: 20%;"></div>
+              </div>
+            </div>
+            <span id="onboardingStepNum" class="text-xs font-bold text-amber-700 dark:text-amber-400">1/5</span>
+          </div>
+
+          <!-- Step 1: Age Group Selection -->
+          <div id="step1" class="onboard-step space-y-4">
+            <div class="text-center my-4">
+              <div class="inline-block p-3 bg-amber-200/50 dark:bg-amber-950/40 rounded-full mb-2 animate-bounceSlow">
+                <span class="text-4xl">🐦</span>
+              </div>
+              <h2 class="text-2xl font-black text-amber-900 dark:text-amber-300 kids-mode-font">Welcome to Talinturo!</h2>
+              <p class="text-sm text-amber-800/80 dark:text-slate-300 mt-1">Let's shape your Filipino Sign Language journey. First, who will be learning today?</p>
+            </div>
+
+            <div class="space-y-3 pt-2">
+              <button onclick="selectAgeGroup('kids')" class="w-full p-4 rounded-2xl border-2 border-amber-300 dark:border-amber-800 bg-white dark:bg-slate-800 hover:border-amber-500 text-left transition flex items-center gap-4 shadow-sm group">
+                <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950 flex items-center justify-center text-2xl group-hover:scale-110 transition">🎨</div>
+                <div class="flex-1">
+                  <div class="font-bold text-amber-950 dark:text-amber-200 text-base">Kids & Young Learners</div>
+                  <div class="text-xs text-amber-800/70 dark:text-slate-400">Games, colorful badges, mascot companions & playful signs!</div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-amber-400"></i>
+              </button>
+
+              <button onclick="selectAgeGroup('adult')" class="w-full p-4 rounded-2xl border-2 border-indigo-200 dark:border-indigo-900 bg-white dark:bg-slate-800 hover:border-indigo-500 text-left transition flex items-center gap-4 shadow-sm group">
+                <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-950 flex items-center justify-center text-2xl group-hover:scale-110 transition">💼</div>
+                <div class="flex-1">
+                  <div class="font-bold text-indigo-950 dark:text-indigo-200 text-base">Teens & Adults (13+)</div>
+                  <div class="text-xs text-indigo-800/70 dark:text-slate-400">Contextual scenarios, workplace FSL, emergency signs & analytics.</div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-indigo-400"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2: Goal & Motivation Selection -->
+          <div id="step2" class="onboard-step hidden space-y-4">
+            <div class="text-center my-4">
+              <h2 id="step2Title" class="text-2xl font-bold text-slate-900 dark:text-white">What is your primary goal?</h2>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">We'll tailor your scenarios and daily practice to match.</p>
+            </div>
+            <div id="goalOptionsContainer" class="space-y-2.5"></div>
+          </div>
+
+          <!-- Step 3: Experience Level -->
+          <div id="step3" class="onboard-step hidden space-y-4">
+            <div class="text-center my-4">
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white">How much FSL do you know?</h2>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Don't worry, Talinturo starts at any level!</p>
+            </div>
+
+            <div class="space-y-2.5">
+              <button onclick="selectLevel('beginner')" class="w-full p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 hover:border-amber-500 text-left transition flex items-center gap-3">
+                <span class="text-2xl">🌱</span>
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">Total Beginner</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Starting from scratch with alphabet & basic greetings.</div>
+                </div>
+              </button>
+              <button onclick="selectLevel('intermediate')" class="w-full p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 hover:border-amber-500 text-left transition flex items-center gap-3">
+                <span class="text-2xl">🌿</span>
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">Know Some Signs</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">I know basic words, numbers, and common gestures.</div>
+                </div>
+              </button>
+              <button onclick="selectLevel('advanced')" class="w-full p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 hover:border-amber-500 text-left transition flex items-center gap-3">
+                <span class="text-2xl">🌳</span>
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">Conversational Practice</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">I want speed, contextual scenarios, and full sentence fluency.</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 4: Daily Commitment -->
+          <div id="step4" class="onboard-step hidden space-y-4">
+            <div class="text-center my-4">
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Choose your daily pace</h2>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Consistent daily practice is the secret to fluent signing.</p>
+            </div>
+
+            <div class="space-y-2.5">
+              <button onclick="selectPace('5')" class="w-full p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 hover:border-amber-500 text-left transition flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="text-xl">☕</span>
+                  <span class="font-bold text-slate-800 dark:text-slate-100">Casual</span>
+                </div>
+                <span class="text-xs font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded-full">5 mins / day</span>
+              </button>
+
+              <button onclick="selectPace('10')" class="w-full p-3.5 rounded-2xl border-2 border-amber-400 bg-amber-50 dark:bg-amber-950/40 text-left transition flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="text-xl">⚡</span>
+                  <span class="font-bold text-slate-800 dark:text-slate-100">Regular (Recommended)</span>
+                </div>
+                <span class="text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-200 dark:bg-amber-900/60 px-2.5 py-1 rounded-full">10 mins / day</span>
+              </button>
+
+              <button onclick="selectPace('20')" class="w-full p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 hover:border-amber-500 text-left transition flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="text-xl">🔥</span>
+                  <span class="font-bold text-slate-800 dark:text-slate-100">Intensive</span>
+                </div>
+                <span class="text-xs font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded-full">20 mins / day</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 5: Summary & Mascot Welcome -->
+          <div id="step5" class="onboard-step hidden space-y-4 text-center">
+            <div class="my-4 space-y-2">
+              <div class="relative inline-block">
+                <div class="w-24 h-24 bg-amber-200 dark:bg-amber-900/80 rounded-full flex items-center justify-center text-5xl mx-auto border-4 border-amber-300 shadow-lg animate-wiggle">
+                  🐦
+                </div>
+                <span class="absolute -bottom-1 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-white">Piki Ready!</span>
+              </div>
+
+              <h2 class="text-2xl font-black text-amber-950 dark:text-amber-200">You're All Set!</h2>
+              <p class="text-xs text-slate-600 dark:text-slate-400 px-4">Piki the Pipit has customized your learning path based on your preferences.</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-amber-200 dark:border-slate-700 shadow-sm text-left space-y-2.5 text-xs text-slate-700 dark:text-slate-300">
+              <div class="flex items-center justify-between border-b dark:border-slate-700 pb-2">
+                <span class="text-slate-500 dark:text-slate-400">Learning Mode:</span>
+                <span id="sumMode" class="font-bold text-amber-600 dark:text-amber-400">Kids Mode</span>
+              </div>
+              <div class="flex items-center justify-between border-b dark:border-slate-700 pb-2">
+                <span class="text-slate-500 dark:text-slate-400">Primary Goal:</span>
+                <span id="sumGoal" class="font-bold text-slate-900 dark:text-white">Play & Talk</span>
+              </div>
+              <div class="flex items-center justify-between border-b dark:border-slate-700 pb-2">
+                <span class="text-slate-500 dark:text-slate-400">Starting Point:</span>
+                <span id="sumLevel" class="font-bold text-slate-900 dark:text-white">Total Beginner</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500 dark:text-slate-400">Daily Goal:</span>
+                <span id="sumPace" class="font-bold text-amber-600 dark:text-amber-400">10 mins/day</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4">
+          <button id="btnOnboardNext" onclick="nextOnboardingStep()" class="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-lg shadow-amber-500/30 transition transform active:scale-95 flex items-center justify-center gap-2">
+            <span>Continue</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- SECTION 2: MAIN DASHBOARD & LEARNING PATH -->
+      <!-- ================================================================= -->
+      <section id="dashboardSection" class="hidden h-full flex-1 flex flex-col bg-slate-50 dark:bg-slate-900 overflow-hidden relative">
+
+        <!-- DASHBOARD TOP HEADER / STATUS BAR -->
+        <div id="topStatusBar" class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-2.5 flex items-center justify-between shrink-0 shadow-sm z-10">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl animate-bounceSlow">🐦</span>
+            <div>
+              <div class="font-black text-amber-500 dark:text-amber-400 text-sm leading-none font-kids">Talinturo</div>
+              <div id="modeIndicatorLabel" class="text-[10px] text-slate-400 font-semibold">Kids Path</div>
+            </div>
+          </div>
+
+          <!-- Stats Counters -->
+          <div class="flex items-center gap-2 sm:gap-3 text-xs font-bold">
+            <div class="flex items-center gap-1 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-full border border-amber-200/50">
+              <span class="text-xs">🔥</span>
+              <span id="streakCount">6</span>
+            </div>
+            <div class="flex items-center gap-1 bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 px-2 py-1 rounded-full border border-cyan-200/50">
+              <span class="text-xs">💎</span>
+              <span id="xpCount">1240</span>
+            </div>
+            <div class="flex items-center gap-1 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 px-2 py-1 rounded-full border border-rose-200/50">
+              <span class="text-xs">❤️</span>
+              <span id="energyCount">5/5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN LAYOUT WRAPPER (Split for Desktop, Single Column for Mobile) -->
+        <div id="mainLayoutWrapper" class="flex-1 flex overflow-hidden">
+
+          <!-- DESKTOP SIDEBAR -->
+          <aside id="desktopSidebar" class="hidden w-60 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 p-4 flex-col justify-between shrink-0">
+            <div class="space-y-6">
+              <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200/60 dark:border-slate-600">
+                <div class="w-10 h-10 rounded-full bg-amber-400 flex items-center justify-center font-bold text-white text-lg">
+                  JD
+                </div>
+                <div>
+                  <div class="font-bold text-sm text-slate-800 dark:text-slate-100">Juan Dela Cruz</div>
+                  <div class="text-[11px] text-amber-600 dark:text-amber-400 font-medium">Level 2 FSL Explorer</div>
+                </div>
+              </div>
+
+              <!-- Navigation Items -->
+              <nav id="desktopNav" class="space-y-1 text-xs sm:text-sm">
+                <!-- Populated dynamically based on role -->
+              </nav>
+            </div>
+
+            <!-- Mascot Tip Box -->
+            <div id="desktopMascotCard" class="p-3 bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/40 dark:to-orange-950/20 rounded-2xl border border-amber-200 dark:border-amber-800/40 text-xs">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xl">🐦</span>
+                <span class="font-bold text-amber-900 dark:text-amber-300">Piki's Tip</span>
+              </div>
+              <p class="text-amber-800 dark:text-amber-400/90 leading-tight">Facial expressions are key in FSL! Eyebrows up for yes/no questions!</p>
+            </div>
+          </aside>
+
+          <!-- DYNAMIC CONTENT CANVAS AREA -->
+          <div id="viewContentArea" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+            <!-- Dynamic View Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- MOBILE BOTTOM TAB NAVIGATION BAR -->
+        <nav id="mobileBottomNav" class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 px-3 py-2 flex items-center justify-around shrink-0 z-20">
+          <!-- Populated dynamically based on role -->
+        </nav>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- SECTION 3: INTERACTIVE PRACTICE & AR SPATIAL STAGE -->
+      <!-- ================================================================= -->
+      <section id="practiceSection" class="hidden h-full flex-1 flex flex-col bg-slate-950 text-white p-3 sm:p-4 overflow-y-auto">
+        <!-- Section Header -->
+        <div class="flex items-center justify-between mb-3 shrink-0">
+          <button onclick="switchTab('scenarios')" class="px-3 py-1.5 bg-slate-800 rounded-xl text-slate-300 text-xs font-bold hover:bg-slate-700 flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Exit Scene</span>
+          </button>
+          <div class="flex items-center gap-2">
+            <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/30 font-semibold flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>AR Camera Sim</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Spatial 3D AR Stage Viewport -->
+        <div class="playgrid grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+          <div class="lg:col-span-2 space-y-3">
+            <div class="stage" id="stage">
+              <!-- Background Bust Overlay -->
+              <svg class="bust opacity-20 pointer-events-none" viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice">
+                <circle cx="200" cy="120" r="46" fill="#3a4390"/>
+                <path d="M90 300c0-70 50-110 110-110s110 40 110 110z" fill="#3a4390"/>
+              </svg>
+
+              <!-- Video Stream -->
+              <video id="vid" autoplay muted playsinline hidden></video>
+
+              <!-- Real 3D Perspective Canvas Engine -->
+              <canvas id="arc"></canvas>
+
+              <!-- Hand Sign Target Zone -->
+              <div class="absolute left-[8%] top-[25%] w-[48%] h-[60%] border-2 border-dashed border-cyan-400/40 rounded-3xl pointer-events-none flex items-start p-2">
+                <span class="bg-slate-900/80 text-cyan-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-cyan-500/30">Sign Zone</span>
+              </div>
+
+              <!-- Animated Hand Skeleton Overlay -->
+              <svg class="hand-skeleton" id="hand" viewBox="0 0 100 100">
+                <line data-a="0" data-b="1"/><line data-a="1" data-b="2"/><line data-a="2" data-b="3"/><line data-a="3" data-b="4"/>
+                <line data-a="0" data-b="5"/><line data-a="5" data-b="6"/><line data-a="6" data-b="7"/><line data-a="7" data-b="8"/>
+                <line data-a="5" data-b="9"/><line data-a="9" data-b="10"/><line data-a="10" data-b="11"/><line data-a="11" data-b="12"/>
+                <line data-a="9" data-b="13"/><line data-a="13" data-b="14"/><line data-a="14" data-b="15"/><line data-a="15" data-b="16"/>
+                <line data-a="13" data-b="17"/><line data-a="17" data-b="18"/><line data-a="18" data-b="19"/><line data-a="19" data-b="20"/><line data-a="0" data-b="17"/>
+                <circle data-i="0"/><circle data-i="1"/><circle data-i="2"/><circle data-i="3"/><circle data-i="4"/>
+                <circle data-i="5"/><circle data-i="6"/><circle data-i="7"/><circle data-i="8"/>
+                <circle data-i="9"/><circle data-i="10"/><circle data-i="11"/><circle data-i="12"/>
+                <circle data-i="13"/><circle data-i="14"/><circle data-i="15"/><circle data-i="16"/>
+                <circle data-i="17"/><circle data-i="18"/><circle data-i="19"/><circle data-i="20"/>
+              </svg>
+
+              <!-- HUD Top Bar -->
+              <div class="absolute top-3 left-3 flex flex-col gap-1 max-w-[65%] z-10">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span id="arSceneNameTag" class="bg-slate-900/80 backdrop-blur text-white text-[11px] font-bold px-2.5 py-1 rounded-full border border-slate-700">First Day Hello</span>
+                  <span id="arStepCounterTag" class="bg-slate-900/80 backdrop-blur text-amber-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-slate-700">Step 1/3</span>
+                </div>
+              </div>
+
+              <!-- AR Speech Bubble -->
+              <div class="arbubble" id="bubble"></div>
+
+              <!-- Status Overlay Pill -->
+              <div class="absolute top-3 right-3 bg-slate-900/90 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold text-cyan-300 border border-slate-700 flex items-center gap-1.5 z-10" id="status">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>Hand detected</span>
+              </div>
+
+              <!-- Countdown / Recording Overlay -->
+              <div id="over"></div>
+
+              <!-- Objective Bar at bottom of stage -->
+              <div class="absolute left-3 bottom-3 right-3 p-2.5 bg-slate-900/85 backdrop-blur-md rounded-2xl border border-slate-700/80 flex flex-col z-10">
+                <span class="text-[10px] text-slate-400 font-semibold">Objective</span>
+                <b id="arObjectiveText" class="text-sm font-display text-amber-300">Greet the guard.</b>
+              </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex items-center justify-between gap-2 pt-1">
+              <button id="signBtn" onclick="doSign()" class="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-sm rounded-2xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-camera"></i>
+                <span>Sign Now</span>
+              </button>
+              
+              <button id="camBtn" onclick="toggleCam()" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-2xl transition border border-slate-700">
+                Use Camera
+              </button>
+            </div>
+
+            <!-- Prototype Simulation Selector -->
+            <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 text-xs space-y-1.5">
+              <div class="text-[11px] text-slate-400">Recognizer simulation result for next attempt:</div>
+              <div class="grid grid-cols-3 gap-1.5">
+                <button onclick="setSimDemo('ok')" id="btnDemoOk" class="py-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-xl font-bold text-[11px]">Correct Sign</button>
+                <button onclick="setSimDemo('wrong')" id="btnDemoWrong" class="py-1.5 bg-slate-800 text-slate-400 border border-slate-700 rounded-xl font-bold text-[11px]">Different Sign</button>
+                <button onclick="setSimDemo('low')" id="btnDemoLow" class="py-1.5 bg-slate-800 text-slate-400 border border-slate-700 rounded-xl font-bold text-[11px]">Unclear Hand</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scenario Details & Feedback Panel -->
+          <div class="space-y-3">
+            <div class="bg-slate-900 p-4 rounded-3xl border border-slate-800 space-y-3">
+              <div class="flex justify-between items-start">
+                <h3 id="scenarioPanelTitle" class="font-bold text-base text-white">First Day Hello</h3>
+                <span id="scenarioPanelLevel" class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800">Level 1</span>
+              </div>
+              <p id="scenarioPanelTrans" class="text-xs text-slate-400">The guard waves as you arrive at the school gate.</p>
+            </div>
+
+            <div class="bg-slate-900 p-4 rounded-3xl border border-slate-800 space-y-2">
+              <div class="text-xs font-bold text-slate-300">Prompt Objective:</div>
+              <div id="scenarioPromptBody" class="text-sm font-bold text-amber-300">Greet the guard.</div>
+              <div id="hintContainer" class="pt-1">
+                <button onclick="showHint()" class="text-xs text-slate-400 hover:text-amber-400 flex items-center gap-1">
+                  <i class="fa-solid fa-lightbulb text-amber-400"></i>
+                  <span>Show sign hint (-5 pts)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic Feedback Box -->
+            <div id="fb" aria-live="polite">
+              <div class="bg-slate-900 p-4 rounded-3xl border border-slate-800 text-xs text-slate-300 space-y-1">
+                <b class="text-sm text-white font-bold block">Ready when you are</b>
+                <p class="text-slate-400">Press <b>Sign Now</b>, then hold your hand steady in the Sign Zone.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- MODAL ROOT (Sign Dictionary & Mission Completion Modals) -->
+      <!-- ================================================================= -->
+      <div id="modal-root"></div>
+
+    </div>
+  </main>
+
+  <!-- Application JS Logic -->
+  <script src="script.js"></script>
+</body>
+</html>

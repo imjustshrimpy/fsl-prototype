@@ -1,0 +1,347 @@
+@import "tailwindcss";
+
+:root {
+  /* ============================================================
+     1. BRAND PALETTE (Hex codes live strictly here)
+     ============================================================ */
+  --color-brand-blue: #1B40FF;
+  --color-brand-yellow: #FFC800;
+  --color-brand-green: #2DB85C;
+  --color-brand-orange: #FF5E2C;
+  --color-brand-pink: #FF88B8;
+  --color-surface-app: #F5F6FA;
+  --color-surface-card: #FFFFFF;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4B5563;
+  --color-text-secondary-on-app: #4B5563;
+
+  /* On-Color Pairs (WCAG AA Compliant) */
+  --color-on-brand-blue: #FFFFFF;
+  --color-on-brand-yellow: #111827;
+  --color-on-brand-green: #111827;
+  --color-on-brand-orange: #111827;
+  --color-on-brand-pink: #111827;
+
+  /* Borders & Focus */
+  --color-border-subtle: #D1D5DB;
+  --color-border-strong: #111827;
+  --color-focus-ring: #1B40FF;
+
+  /* Semantic Feedback */
+  --color-success: #15803D;
+  --color-on-success: #FFFFFF;
+  --color-success-surface: #DCFCE7;
+  --color-on-success-surface: #14532D;
+
+  --color-error: #B91C1C;
+  --color-on-error: #FFFFFF;
+  --color-error-surface: #FEE2E2;
+  --color-on-error-surface: #7F1D1D;
+
+  --color-warning: #B45309;
+  --color-on-warning: #FFFFFF;
+  --color-warning-surface: #FEF3C7;
+  --color-on-warning-surface: #78350F;
+
+  --color-info: #1D4ED8;
+  --color-on-info: #FFFFFF;
+  --color-info-surface: #DBEAFE;
+  --color-on-info-surface: #1E3A8A;
+
+  /* Video & Overlays (≥ 7:1 for captions) */
+  --color-caption-bg: #000000;
+  --color-caption-text: #FFFFFF;
+  --color-camera-guide: #FFC800;
+  --color-camera-guide-valid: #2DB85C;
+  --color-overlay-scrim: rgba(0, 0, 0, 0.75);
+
+  /* Vector Demonstration Avatar Colors */
+  --color-avatar-skin: #F8C8A0;
+  --color-avatar-hair: #2D3748;
+  --color-avatar-feature: #1A202C;
+  --font-size-micro: 11px;
+
+  /* Elevation Shadows (flat vector; shadows via tokens only) */
+  --elevation-none: none;
+  --elevation-low: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --elevation-mid: 0 4px 6px rgba(0, 0, 0, 0.08);
+  --elevation-high: 0 10px 15px rgba(0, 0, 0, 0.12);
+
+  /* Typography Fallbacks */
+  --font-family-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* ============================================================
+     2. DEFAULT MODE TOKENS: ADULT (Baseline)
+     ============================================================ */
+  --radius-card: 16px;
+  --radius-control: 12px;
+  --radius-pill: 9999px;
+  --radius-avatar: 12px;
+  --border-width: 1px;
+  --border-color: var(--color-border-subtle);
+
+  --font-size-title: 20px;
+  --font-size-subtitle: 17px;
+  --font-size-body: 15px;
+  --font-size-caption: 13px;
+  --line-height-body: 1.5;
+  --font-weight-title: 700;
+  --font-weight-body: 400;
+
+  --touch-min: 44px;
+  --control-padding: 0.75rem;
+  --node-min-height: 56px;
+  --nav-item-min-height: 44px;
+  --sign-video-min-height: 240px;
+  --duration-base: 180ms;
+  --hover-lift: -2px;
+}
+
+/* ============================================================
+   3. OVERRIDES: KIDS MODE
+   ============================================================ */
+[data-age-mode="kids"] {
+  --radius-card: 28px;
+  --radius-control: 20px;
+  --radius-pill: 9999px;
+  --radius-avatar: 9999px;
+  --border-width: 2px;
+  --border-color: var(--color-border-strong);
+
+  --font-size-title: 28px;
+  --font-size-subtitle: 22px;
+  --font-size-body: 18px;
+  --font-size-caption: 15px;
+  --line-height-body: 1.6;
+  --font-weight-title: 800;
+  --font-weight-body: 600;
+
+  --touch-min: 52px;
+  --control-padding: 1rem;
+  --node-min-height: 72px;
+  --nav-item-min-height: 52px;
+  --sign-video-min-height: 320px;
+  --duration-base: 300ms;
+  --hover-lift: 0px;
+}
+
+/* ============================================================
+   4. OVERRIDES: ADULT MODE (Explicit)
+   ============================================================ */
+[data-age-mode="adult"] {
+  --radius-card: 16px;
+  --radius-control: 12px;
+  --radius-pill: 9999px;
+  --radius-avatar: 12px;
+  --border-width: 1px;
+  --border-color: var(--color-border-subtle);
+
+  --font-size-title: 20px;
+  --font-size-subtitle: 17px;
+  --font-size-body: 15px;
+  --font-size-caption: 13px;
+  --line-height-body: 1.5;
+  --font-weight-title: 700;
+  --font-weight-body: 400;
+
+  --touch-min: 44px;
+  --control-padding: 0.75rem;
+  --node-min-height: 56px;
+  --nav-item-min-height: 44px;
+  --sign-video-min-height: 240px;
+  --duration-base: 180ms;
+  --hover-lift: -2px;
+}
+
+/* ============================================================
+   5. OVERRIDES: HIGH CONTRAST MODE
+   ============================================================ */
+[data-high-contrast="true"] {
+  --color-surface-app: #000000;
+  --color-surface-card: #000000;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #E5E7EB;
+  --color-text-secondary-on-app: #FFFFFF;
+  --color-border-subtle: #FFFFFF;
+  --color-border-strong: #FFFFFF;
+  --color-focus-ring: #FFC800;
+  --border-width: 2px;
+  --border-color: #FFFFFF;
+}
+
+/* ============================================================
+   6. OVERRIDES: ACCESSIBLE TEXT SIZE SCALING
+   ============================================================ */
+[data-text-size="125"] {
+  --font-size-title: calc(var(--font-size-title) * 1.25);
+  --font-size-subtitle: calc(var(--font-size-subtitle) * 1.25);
+  --font-size-body: calc(var(--font-size-body) * 1.25);
+  --font-size-caption: calc(var(--font-size-caption) * 1.25);
+}
+
+[data-text-size="150"] {
+  --font-size-title: calc(var(--font-size-title) * 1.5);
+  --font-size-subtitle: calc(var(--font-size-subtitle) * 1.5);
+  --font-size-body: calc(var(--font-size-body) * 1.5);
+  --font-size-caption: calc(var(--font-size-caption) * 1.5);
+}
+
+/* ============================================================
+   7. REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-reduced-motion="true"] * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* ============================================================
+   8. TAILWIND @THEME MAPPINGS & CUSTOM UTILITIES
+   ============================================================ */
+@theme {
+  --color-brand-blue: var(--color-brand-blue);
+  --color-brand-yellow: var(--color-brand-yellow);
+  --color-brand-green: var(--color-brand-green);
+  --color-brand-orange: var(--color-brand-orange);
+  --color-brand-pink: var(--color-brand-pink);
+  --color-surface-app: var(--color-surface-app);
+  --color-surface-card: var(--color-surface-card);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-secondary-on-app: var(--color-text-secondary-on-app);
+
+  --color-on-brand-blue: var(--color-on-brand-blue);
+  --color-on-brand-yellow: var(--color-on-brand-yellow);
+  --color-on-brand-green: var(--color-on-brand-green);
+  --color-on-brand-orange: var(--color-on-brand-orange);
+  --color-on-brand-pink: var(--color-on-brand-pink);
+
+  --color-border-subtle: var(--color-border-subtle);
+  --color-border-strong: var(--color-border-strong);
+  --color-focus-ring: var(--color-focus-ring);
+
+  --color-success: var(--color-success);
+  --color-on-success: var(--color-on-success);
+  --color-success-surface: var(--color-success-surface);
+  --color-on-success-surface: var(--color-on-success-surface);
+
+  --color-error: var(--color-error);
+  --color-on-error: var(--color-on-error);
+  --color-error-surface: var(--color-error-surface);
+  --color-on-error-surface: var(--color-on-error-surface);
+
+  --color-warning: var(--color-warning);
+  --color-on-warning: var(--color-on-warning);
+  --color-warning-surface: var(--color-warning-surface);
+  --color-on-warning-surface: var(--color-on-warning-surface);
+
+  --color-info: var(--color-info);
+  --color-on-info: var(--color-on-info);
+  --color-info-surface: var(--color-info-surface);
+  --color-on-info-surface: var(--color-on-info-surface);
+
+  --color-caption-bg: var(--color-caption-bg);
+  --color-caption-text: var(--color-caption-text);
+  --color-camera-guide: var(--color-camera-guide);
+  --color-camera-guide-valid: var(--color-camera-guide-valid);
+  --color-overlay-scrim: var(--color-overlay-scrim);
+
+  --radius-card: var(--radius-card);
+  --radius-control: var(--radius-control);
+  --radius-pill: var(--radius-pill);
+  --radius-avatar: var(--radius-avatar);
+
+  --font-body: var(--font-family-body);
+}
+
+@utility min-h-touch {
+  min-height: var(--touch-min);
+  min-width: var(--touch-min);
+}
+
+@utility min-h-node {
+  min-height: var(--node-min-height);
+}
+
+@utility min-h-nav-item {
+  min-height: var(--nav-item-min-height);
+}
+
+@utility min-h-sign-video {
+  min-height: var(--sign-video-min-height);
+}
+
+@utility rounded-card {
+  border-radius: var(--radius-card);
+}
+
+@utility rounded-control {
+  border-radius: var(--radius-control);
+}
+
+@utility rounded-pill {
+  border-radius: var(--radius-pill);
+}
+
+@utility rounded-avatar {
+  border-radius: var(--radius-avatar);
+}
+
+@utility border-adaptive {
+  border-width: var(--border-width);
+  border-color: var(--border-color);
+}
+
+@utility text-adaptive-body {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-body);
+}
+
+@utility text-adaptive-title {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-title);
+}
+
+@utility text-adaptive-subtitle {
+  font-size: var(--font-size-subtitle);
+}
+
+@utility text-adaptive-caption {
+  font-size: var(--font-size-caption);
+}
+
+@utility text-micro {
+  font-size: var(--font-size-micro);
+}
+
+@utility pad-adaptive-control {
+  padding: var(--control-padding);
+}
+
+@utility focus-ring-adaptive {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  &:focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-body);
+  background-color: var(--color-surface-app);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+}

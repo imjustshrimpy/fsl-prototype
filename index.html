@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" data-age-mode="adult">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>Talinturo - Filipino Sign Language (FSL) Learning</title>
+    <!-- Anti-flash Bootstrap script for age mode & a11y preferences -->
+    <script>
+      (function() {
+        try {
+          var mode = localStorage.getItem('talinturo.ageMode') || 'adult';
+          document.documentElement.dataset.ageMode = mode;
+          var hc = localStorage.getItem('talinturo.highContrast');
+          if (hc === 'true') document.documentElement.dataset.highContrast = 'true';
+          var rm = localStorage.getItem('talinturo.reducedMotion');
+          if (rm === 'true') document.documentElement.dataset.reducedMotion = 'true';
+          var ts = localStorage.getItem('talinturo.textSize');
+          if (ts && ts !== '100') document.documentElement.dataset.textSize = ts;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
