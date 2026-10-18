@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { AgeMode, UserRole, AccessibilityPreferences } from '../types';
+import { AgeMode, UserRole, AccessibilityPreferences, OnboardingSettings } from '../types';
 
 interface NavItemConfig {
   id: string;
@@ -23,6 +23,8 @@ interface AgeModeContextType {
   setRole: (role: UserRole) => void;
   accessibility: AccessibilityPreferences;
   updateAccessibility: (updates: Partial<AccessibilityPreferences>) => void;
+  onboardingSettings: OnboardingSettings;
+  setOnboardingSettings: (settings: OnboardingSettings) => void;
   signPlayerDefaults: SignPlayerDefaults;
   navItems: NavItemConfig[];
   activeTab: string;
@@ -37,6 +39,15 @@ const DEFAULT_ACCESSIBILITY: AccessibilityPreferences = {
   highContrast: false,
   textSize: '100',
   optionalSoundEffects: false, // OFF by default in both modes; no TTS anywhere
+};
+
+export const DEFAULT_ONBOARDING_SETTINGS: OnboardingSettings = {
+  goalFocus: 'family',
+  dailyCommitment: 'regular',
+  strictness: 'balanced',
+  sensoryMode: 'visual-audio',
+  cameraPerspective: 'mirror',
+  notificationStyle: 'morning-mascot',
 };
 
 const KIDS_NAV: NavItemConfig[] = [
@@ -92,6 +103,19 @@ export const AgeModeProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return DEFAULT_ACCESSIBILITY;
   });
 
+  const [onboardingSettings, setOnboardingSettingsState] = useState<OnboardingSettings>(() => {
+    try {
+      const saved = localStorage.getItem('talinturo.onboardingSettings');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          return { ...DEFAULT_ONBOARDING_SETTINGS, ...parsed };
+        }
+      }
+    } catch (e) {}
+    return DEFAULT_ONBOARDING_SETTINGS;
+  });
+
   const setMode = useCallback((newMode: AgeMode) => {
     setModeState(newMode);
     try {
@@ -104,6 +128,13 @@ export const AgeModeProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setRoleState(newRole);
     try {
       localStorage.setItem('talinturo.role', newRole);
+    } catch (e) {}
+  }, []);
+
+  const setOnboardingSettings = useCallback((nextSettings: OnboardingSettings) => {
+    setOnboardingSettingsState(nextSettings);
+    try {
+      localStorage.setItem('talinturo.onboardingSettings', JSON.stringify(nextSettings));
     } catch (e) {}
   }, []);
 
@@ -185,6 +216,8 @@ export const AgeModeProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setRole,
         accessibility,
         updateAccessibility,
+        onboardingSettings,
+        setOnboardingSettings,
         signPlayerDefaults,
         navItems,
         activeTab,

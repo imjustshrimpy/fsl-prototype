@@ -1,4 +1,4 @@
-import { AdaptiveSignRecord, AdaptiveRecommendation, SignData } from '../types';
+import { AdaptiveSignRecord, AdaptiveRecommendation, GoalFocus, SignData } from '../types';
 
 /**
  * Adaptive Difficulty Engine
@@ -34,6 +34,29 @@ export function isDueForReview(record: AdaptiveSignRecord, now: number): boolean
 /**
  * Generates transparent next-lesson recommendations and weak area reviews.
  */
+const GOAL_FOCUS_ORDER: Record<GoalFocus, string[]> = {
+  family: ['pagkain', 'inumin', 'kumusta', 'salamat', 'pakiusap', 'ako', 'guro', 'tulong', 'doktor', 'pulis'],
+  school: ['guro', 'tulong', 'kumusta', 'ako', 'salamat', 'pakiusap', 'pagkain', 'inumin', 'doktor', 'pulis'],
+  community: ['kumusta', 'pakiusap', 'salamat', 'tulong', 'guro', 'pagkain', 'inumin', 'doktor', 'pulis', 'ako'],
+  workplace: ['kumusta', 'pakiusap', 'salamat', 'guro', 'tulong', 'doktor', 'pulis', 'pagkain', 'inumin', 'ako'],
+};
+
+export function orderSignsByGoalFocus(signs: SignData[], goalFocus: GoalFocus): SignData[] {
+  const order = GOAL_FOCUS_ORDER[goalFocus] || GOAL_FOCUS_ORDER.family;
+  const orderMap = new Map(order.map((signId, index) => [signId, index]));
+
+  return [...signs].sort((a, b) => {
+    const aIndex = orderMap.get(a.id) ?? Number.MAX_SAFE_INTEGER;
+    const bIndex = orderMap.get(b.id) ?? Number.MAX_SAFE_INTEGER;
+
+    if (aIndex !== bIndex) {
+      return aIndex - bIndex;
+    }
+
+    return a.id.localeCompare(b.id);
+  });
+}
+
 export function computeAdaptiveRecommendation(input: AdaptiveInput): AdaptiveRecommendation {
   const { allSigns, records, currentTimestamp = Date.now() } = input;
 

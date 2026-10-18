@@ -2,6 +2,22 @@ export type AgeMode = 'kids' | 'adult';
 
 export type UserRole = 'learner' | 'educator' | 'family';
 
+export type GoalFocus = 'family' | 'school' | 'community' | 'workplace';
+export type DailyCommitment = 'casual' | 'regular' | 'serious' | 'intensive';
+export type StrictnessLevel = 'encouraging' | 'balanced' | 'strict';
+export type SensoryMode = 'visual-audio' | 'visual-haptics' | 'readability';
+export type CameraPerspective = 'mirror' | 'observer' | 'multiview';
+export type NotificationStyle = 'morning-mascot' | 'morning-direct' | 'afternoon-mascot' | 'afternoon-direct' | 'evening-mascot' | 'evening-direct' | 'off';
+
+export interface OnboardingSettings {
+  goalFocus: GoalFocus;
+  dailyCommitment: DailyCommitment;
+  strictness: StrictnessLevel;
+  sensoryMode: SensoryMode;
+  cameraPerspective: CameraPerspective;
+  notificationStyle: NotificationStyle;
+}
+
 export type SignCategory = 'basic' | 'school' | 'everyday' | 'public' | 'emergency';
 
 export interface SignParameters {

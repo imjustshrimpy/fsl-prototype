@@ -427,7 +427,8 @@ export const SignPracticeCamera: React.FC<SignPracticeCameraProps> = ({
           autoPlay
           playsInline
           muted
-          className="absolute inset-0 z-10 h-full w-full object-cover scale-x-[-1] opacity-85"
+          className="absolute inset-0 z-10 h-full w-full object-cover opacity-85"
+          style={{ transform: 'scaleX(-1)' }}
         />
 
         <>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAgeMode } from './context/AgeModeContext';
 import { useTranslation } from './i18n';
-import { AgeMode, SignData, UserRole } from './types';
+import { AgeMode, OnboardingSettings, SignData, UserRole } from './types';
 import { BottomNavPill } from './components/adaptive/BottomNavPill';
 import { HomePage } from './pages/HomePage';
 import { LessonPage } from './pages/LessonPage';
@@ -11,34 +11,31 @@ import { SettingsPage } from './pages/SettingsPage';
 import { OnboardingPage } from './pages/OnboardingPage';
 
 export const AppContent: React.FC = () => {
-  const { activeTab, setActiveTab, isKids, setMode, setRole, role } = useAgeMode();
+  const { activeTab, setActiveTab, isKids, setMode, setRole, role, setOnboardingSettings } = useAgeMode();
   const { t } = useTranslation();
 
   const [activeLessonSign, setActiveLessonSign] = useState<SignData | null>(null);
   const mainRef = useRef<HTMLElement>(null);
-  const [onboardingComplete, setOnboardingComplete] = useState(() => {
-    try {
-      return localStorage.getItem('talinturo.onboardingComplete') === 'true';
-    } catch (e) {
-      return false;
-    }
-  });
+  const [onboardingComplete, setOnboardingComplete] = useState(false);
 
-  const completeOnboarding = (mode: AgeMode, role: UserRole) => {
+  const completeOnboarding = (mode: AgeMode, role: UserRole, settings: OnboardingSettings) => {
     setMode(mode);
     setRole(role);
+    setOnboardingSettings(settings);
     setActiveTab('home');
-    try {
-      localStorage.setItem('talinturo.onboardingComplete', 'true');
-    } catch (e) {}
     setOnboardingComplete(true);
   };
 
   const restartOnboarding = () => {
     setActiveLessonSign(null);
-    try {
-      localStorage.removeItem('talinturo.onboardingComplete');
-    } catch (e) {}
+    setOnboardingSettings({
+      goalFocus: 'family',
+      dailyCommitment: 'regular',
+      strictness: 'balanced',
+      sensoryMode: 'visual-audio',
+      cameraPerspective: 'mirror',
+      notificationStyle: 'morning-mascot',
+    });
     setOnboardingComplete(false);
   };
 

@@ -296,6 +296,83 @@ export const enPH = {
     educatorTitle: 'As an instructor',
     educatorDescription: 'Adult mode with classroom progress tools.',
     continue: 'Continue',
+    back: 'Back',
+    finish: 'Finish setup',
+    stepLabels: {
+      roleSelection: 'Role Selection',
+      focus: 'Focus',
+      commitment: 'Commitment',
+      strictness: 'Strictness',
+      sensory: 'Sensory',
+      setupComplete: 'Setup Complete',
+    },
+    summary: {
+      profile: 'Profile',
+      preferences: 'Preferences',
+      goal: 'Goal',
+      commitment: 'Commitment',
+      strictness: 'Strictness',
+      sensory: 'Sensory',
+    },
+    steps: {
+      identity: {
+        title: 'Who is learning today?',
+        description: 'Pick the learner profile that matches this setup.',
+      },
+      goal: {
+        title: 'Primary goal focus',
+        description: 'Choose the learning context that will reorder the first lessons.',
+      },
+      pace: {
+        title: 'Daily commitment',
+        description: 'Set the pace that matches how much time you can practice each day.',
+      },
+      strictness: {
+        title: 'Feedback strictness',
+        description: 'Tune how strict the sign check should be during practice.',
+      },
+      sensory: {
+        title: 'Audio & sensory mode',
+        description: 'Choose how visual, haptic, and audio cues should appear.',
+      },
+      complete: {
+        title: 'Setup complete',
+        description: 'Review the selected profile and practice preferences before continuing.',
+      },
+    },
+    goal: {
+      family: { label: 'Family & Home', detail: 'Household tasks, feelings, and daily routines.' },
+      school: { label: 'School & Academic', detail: 'Classroom words, teacher prompts, and learning tasks.' },
+      community: { label: 'Community & Advocacy', detail: 'Public interactions, greetings, and local assistance.' },
+      workplace: { label: 'Professional & Workplace', detail: 'Office language, customer-facing greetings, and formal terms.' },
+    },
+    commitment: {
+      casual: { label: 'Casual — 5 mins/day', detail: 'One short scenario and a light review.' },
+      regular: { label: 'Regular — 10 mins/day', detail: 'Two scenarios plus one review drill.' },
+      serious: { label: 'Serious — 15 mins/day', detail: 'Three scenarios and a deeper error check.' },
+      intensive: { label: 'Intensive — 20+ mins/day', detail: 'Full chapter run with a retry vault.' },
+    },
+    strictness: {
+      encouraging: { label: 'Encouraging / Forgiving', detail: 'Broader tolerance and a gentler confidence threshold.' },
+      balanced: { label: 'Balanced (Default)', detail: 'Standard check with steady sign accuracy expectations.' },
+      strict: { label: 'Precision / Strict', detail: 'High accuracy threshold with tighter corrections.' },
+    },
+    sensory: {
+      visualAudio: { label: 'Visual + Audio Cues', detail: 'Sound, captions, and visual prompts remain on.' },
+      visualHaptics: { label: 'Visual + Haptics Only', detail: 'Silent mode with vibration and text-focused cues.' },
+      readability: { label: 'Text & High Readability', detail: 'Minimal motion, stronger contrast, and static feedback.' },
+    },
+    camera: {
+      mirror: { label: 'Mirror View (First-Person)', detail: 'Direct first-person copy view for easier mapping.' },
+      observer: { label: 'Observer View (Third-Person)', detail: 'Conversation-facing view for classroom and social sign use.' },
+      multiview: { label: 'Multi-Angle / 3D', detail: 'Side-view and slower breakdowns for visual analysis.' },
+    },
+    notifications: {
+      morningMascot: { label: 'Morning nudge • Mascot', detail: '8:00 AM cheerful reminder with a playful mascot prompt.' },
+      afternoonDirect: { label: 'Afternoon nudge • Direct', detail: '12:00 PM concise goal-based prompt.' },
+      eveningDirect: { label: 'Evening nudge • Direct', detail: '7:00 PM practice recap with quick next-step guidance.' },
+      off: { label: 'Off', detail: 'No device nudges or alert prompts.' },
+    },
   },
   common: {
     locked: 'Locked',

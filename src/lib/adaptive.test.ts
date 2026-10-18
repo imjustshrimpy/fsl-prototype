@@ -3,6 +3,7 @@ import {
   calculateWeightedAccuracy,
   isDueForReview,
   computeAdaptiveRecommendation,
+  orderSignsByGoalFocus,
 } from './adaptive';
 import { SIGN_MANIFEST } from '../data/sign-manifest';
 
@@ -113,5 +114,11 @@ describe('Adaptive Difficulty Engine', () => {
     expect(rec.scenarioComplexity).toBe('advanced');
     expect(rec.recommendedSpeed).toBe(1.0);
     expect(rec.hintsCount).toBe(1);
+  });
+
+  it('prioritizes school-focused signs when the user selects an academic goal', () => {
+    const ordered = orderSignsByGoalFocus(SIGN_MANIFEST, 'school');
+    expect(ordered[0].id).toBe('guro');
+    expect(ordered.slice(0, 3).some((sign) => sign.category === 'school')).toBe(true);
   });
 });

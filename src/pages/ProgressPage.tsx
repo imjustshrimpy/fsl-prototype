@@ -313,7 +313,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab
             <div className="bg-brand-blue px-4 py-5 text-on-brand-blue">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
-                  <p className="text-caption-adaptive uppercase tracking-[0.12em] text-on-brand-blue/80">
+                  <p className="text-caption-adaptive uppercase tracking-label text-on-brand-blue/80">
                     {t('instructor.subjectLabel')}
                   </p>
                   <h3 className="mt-1 break-words text-title-adaptive font-black text-on-brand-blue">
@@ -372,7 +372,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab
             <div className="grid grid-cols-1 gap-3 @xs:grid-cols-2">
               {overviewMetrics.map((metric) => (
                 <Card key={metric.label} className="space-y-2">
-                  <p className="text-caption-adaptive uppercase tracking-[0.1em] text-text-secondary">{metric.label}</p>
+                  <p className="text-caption-adaptive uppercase tracking-subtle text-text-secondary">{metric.label}</p>
                   <div className="flex items-end justify-between gap-2">
                     <span className="text-title-adaptive font-black text-text-primary">{metric.value}</span>
                     <span className="rounded-pill bg-brand-blue/10 px-2 py-1 text-caption-adaptive font-bold text-brand-blue">
@@ -388,7 +388,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab
               <Card className="space-y-4 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-caption-adaptive uppercase tracking-[0.1em] text-text-secondary">
+                    <p className="text-caption-adaptive uppercase tracking-subtle text-text-secondary">
                       {t('instructor.overview.trendTitle')}
                     </p>
                     <h4 className="mt-1 text-body-adaptive font-black text-text-primary">
@@ -442,7 +442,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab
           </section>}
 
           {instructorTab === 'stream' && (
-            <div className="grid gap-5 lg:grid-cols-[1.65fr_0.9fr]">
+            <div className="grid gap-5 lg:grid-cols-2" style={{ gridTemplateColumns: '1.65fr 0.9fr' }}>
               <div className="space-y-4">
                 <Card className="space-y-3">
                   <div className="flex items-center gap-2 text-body-adaptive font-bold text-text-primary">
@@ -450,7 +450,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab
                     <span>{t('instructor.stream.announcementTitle')}</span>
                   </div>
                   <textarea
-                    className="w-full min-h-[110px] rounded-control border-adaptive bg-surface-app p-3 text-body-adaptive text-text-primary placeholder:text-text-secondary focus-ring-adaptive"
+                    className="w-full min-h-form-textarea rounded-control border-adaptive bg-surface-app p-3 text-body-adaptive text-text-primary placeholder:text-text-secondary focus-ring-adaptive"
                     placeholder={t('instructor.stream.announcementPlaceholder')}
                   />
                   <div className="flex items-center justify-between gap-3">
@@ -556,7 +556,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab
                   <span>{t('instructor.people.title')}</span>
                 </div>
 
-                <table className="w-full min-w-[620px] border-collapse text-left text-caption-adaptive">
+                <table className="w-full min-w-data-table border-collapse text-left text-caption-adaptive">
                   <thead>
                     <tr className="border-b border-adaptive text-text-secondary">
                       <th scope="col" className="pb-2 font-bold">{t('instructor.people.headers.student')}</th>
@@ -602,7 +602,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab
                   <span>{t('instructor.grades.title')}</span>
                 </div>
 
-                <table className="w-full min-w-[620px] border-collapse text-left text-caption-adaptive">
+                <table className="w-full min-w-data-table border-collapse text-left text-caption-adaptive">
                   <thead>
                     <tr className="border-b border-adaptive text-text-secondary">
                       <th scope="col" className="pb-2 font-bold">{t('instructor.grades.headers.student')}</th>
@@ -670,7 +670,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab
               <div className="w-full max-w-md rounded-card border-adaptive bg-surface-card p-5 shadow-high">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-caption-adaptive uppercase tracking-[0.12em] text-text-secondary">
+                    <p className="text-caption-adaptive uppercase tracking-label text-text-secondary">
                       {t('instructor.people.portfolioBadge')}
                     </p>
                     <h4 className="mt-1 text-subtitle-adaptive font-black text-text-primary">{portfolioStudent.name}</h4>
@@ -707,7 +707,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab
               <div className="w-full max-w-xl rounded-card border-adaptive bg-surface-card p-5 shadow-high">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-caption-adaptive uppercase tracking-[0.12em] text-text-secondary">
+                    <p className="text-caption-adaptive uppercase tracking-label text-text-secondary">
                       {t('instructor.review.title')}
                     </p>
                     <h4 className="mt-1 text-subtitle-adaptive font-black text-text-primary">
@@ -719,7 +719,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab
                   </button>
                 </div>
 
-                <div className="mt-4 grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
+                <div className="mt-4 grid gap-4 md:grid-cols-2" style={{ gridTemplateColumns: '0.9fr 1.1fr' }}>
                   <div className="rounded-card border-adaptive bg-surface-app p-3">
                     <div className="flex items-center gap-2 text-body-adaptive font-bold text-text-primary">
                       <Video className="w-4 h-4 text-brand-blue" aria-hidden="true" />

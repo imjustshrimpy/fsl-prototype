@@ -4,31 +4,28 @@
   /* ============================================================
      1. BRAND PALETTE (Hex codes live strictly here)
      ============================================================ */
-  --color-brand-blue: #1B40FF;
-  --color-brand-yellow: #FFC800;
+  --color-brand-blue: #1A3FBF;
+  --color-brand-yellow: #F3C730;
   --color-brand-green: #2DB85C;
-  --color-brand-orange: #FF5E2C;
+  --color-brand-orange: #F66233;
   --color-brand-pink: #FF88B8;
-  --color-surface-app: #F5F6FA;
+  --color-surface-app: #FFFFFF;
   --color-surface-card: #FFFFFF;
-  --color-text-primary: #111827;
-  --color-text-secondary: #4B5563;
-  --color-text-secondary-on-app: #4B5563;
+  --color-text-primary: #393939;
+  --color-text-secondary: #5B5B5B;
+  --color-text-secondary-on-app: #5B5B5B;
 
   /* On-Color Pairs (WCAG AA Compliant) */
   --color-on-brand-blue: #FFFFFF;
-  --color-on-brand-yellow: #111827;
-  --color-on-brand-green: #111827;
-  --color-on-brand-orange: #111827;
-  --color-on-brand-pink: #111827;
+  --color-on-brand-yellow: #393939;
+  --color-on-brand-green: #393939;
+  --color-on-brand-orange: #FFFFFF;
+  --color-on-brand-pink: #393939;
 
-  /* Borders & Focus
-     Both border tokens clear 3:1 against surface-app and surface-card
-     (see docs/contrast-matrix.md): border-strong #6B7280 = 4.48:1 / 4.83:1,
-     border-subtle #82868F = 3.38:1 / 3.65:1. */
-  --color-border-subtle: #82868F;
-  --color-border-strong: #6B7280;
-  --color-focus-ring: #1B40FF;
+  /* Borders & Focus */
+  --color-border-subtle: #D6D0C8;
+  --color-border-strong: #393939;
+  --color-focus-ring: #1A3FBF;
 
   /* Semantic Feedback */
   --color-success: #15803D;
@@ -52,9 +49,9 @@
   --color-on-info-surface: #1E3A8A;
 
   /* Video & Overlays (≥ 7:1 for captions) */
-  --color-caption-bg: #000000;
+  --color-caption-bg: #393939;
   --color-caption-text: #FFFFFF;
-  --color-camera-guide: #FFC800;
+  --color-camera-guide: #F3C730;
   --color-camera-guide-valid: #2DB85C;
   --color-overlay-scrim: rgba(0, 0, 0, 0.75);
 
@@ -165,14 +162,14 @@
    5. OVERRIDES: HIGH CONTRAST MODE
    ============================================================ */
 [data-high-contrast="true"] {
-  --color-surface-app: #000000;
-  --color-surface-card: #000000;
-  --color-text-primary: #FFFFFF;
+  --color-surface-app: #FFFFFF;
+  --color-surface-card: #FFFFFF;
+  --color-text-primary: #393939;
   --color-text-secondary: #E5E7EB;
   --color-text-secondary-on-app: #FFFFFF;
   --color-border-subtle: #FFFFFF;
   --color-border-strong: #FFFFFF;
-  --color-focus-ring: #FFC800;
+  --color-focus-ring: #F3C730;
   --border-width: 2px;
   --border-color: #FFFFFF;
 }
@@ -289,6 +286,30 @@
   min-height: var(--sign-video-min-height);
 }
 
+@utility min-h-form-textarea {
+  min-height: 110px;
+}
+
+@utility min-w-data-table {
+  min-width: 620px;
+}
+
+@utility tracking-label {
+  letter-spacing: 0.12em;
+}
+
+@utility tracking-subtle {
+  letter-spacing: 0.1em;
+}
+
+@utility grid-split-main {
+  grid-template-columns: 1.65fr 0.9fr;
+}
+
+@utility grid-split-review {
+  grid-template-columns: 0.9fr 1.1fr;
+}
+
 @utility rounded-card {
   border-radius: var(--radius-card);
 }
@@ -385,6 +406,45 @@
 
 @utility text-accent {
   color: var(--color-brand-blue);
+}
+
+@utility stepper-track-base {
+  background-color: var(--color-border-subtle);
+}
+
+@utility stepper-track-complete {
+  background-color: var(--color-brand-orange);
+}
+
+@utility stepper-node-complete {
+  background-color: var(--color-brand-orange);
+  border-color: var(--color-border-strong);
+  color: var(--color-on-brand-orange);
+}
+
+@utility stepper-node-active {
+  background-color: var(--color-brand-blue);
+  border-color: var(--color-border-strong);
+  color: var(--color-on-brand-blue);
+}
+
+@utility stepper-node-upcoming {
+  background-color: var(--color-surface-card);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-secondary);
+}
+
+@utility stepper-label-complete {
+  color: var(--color-brand-orange);
+}
+
+@utility stepper-label-active {
+  color: var(--color-brand-blue);
+}
+
+@utility stepper-label-upcoming {
+  color: var(--color-text-primary);
+  opacity: 0.5;
 }
 
 @utility pad-safe-bottom {

@@ -3,7 +3,7 @@ import { useAgeMode } from '../context/AgeModeContext';
 import { useTranslation } from '../i18n';
 import { SIGN_MANIFEST } from '../data/sign-manifest';
 import { SignData } from '../types';
-import { computeAdaptiveRecommendation } from '../lib/adaptive';
+import { computeAdaptiveRecommendation, orderSignsByGoalFocus } from '../lib/adaptive';
 import { AdaptiveHeroCard } from '../components/adaptive/AdaptiveHeroCard';
 import { StatGrid } from '../components/adaptive/StatGrid';
 import { LearningNodeCard, NodeStatus } from '../components/adaptive/LearningNodeCard';
@@ -16,7 +16,7 @@ export interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onSelectSign, onOpenScenarios }) => {
-  const { isKids } = useAgeMode();
+  const { isKids, onboardingSettings } = useAgeMode();
   const { t } = useTranslation();
 
   // Mock learner history records for adaptive engine
@@ -47,8 +47,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectSign, onOpenScenario
     },
   });
 
+  const orderedSigns = orderSignsByGoalFocus(SIGN_MANIFEST, onboardingSettings.goalFocus);
+
   const recommendation = computeAdaptiveRecommendation({
-    allSigns: SIGN_MANIFEST,
+    allSigns: orderedSigns,
     records,
   });
 
@@ -60,7 +62,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectSign, onOpenScenario
     return 'default';
   };
 
-  const recommendedSign = SIGN_MANIFEST.find((s: SignData) => s.id === recommendation.nextLessonSignId) || SIGN_MANIFEST[0];
+  const recommendedSign = orderedSigns.find((s: SignData) => s.id === recommendation.nextLessonSignId) || orderedSigns[0];
 
   const section = (children: React.ReactNode) => (
     <section className="space-y-4">{children}</section>
@@ -139,7 +141,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectSign, onOpenScenario
         </div>
         <div className="pb-2">
           <div className="grid grid-cols-1 gap-2.5">
-            {SIGN_MANIFEST.map((sign: SignData, idx: number) => (
+            {orderedSigns.map((sign: SignData, idx: number) => (
               <LearningNodeCard
                 key={sign.id}
                 sign={sign}

@@ -89,9 +89,8 @@ export const SignClip: React.FC<SignClipProps> = ({
       <div className="relative bg-surface-app border-b border-adaptive overflow-hidden flex items-center justify-center min-h-sign-video select-none">
         {/* Mirror container */}
         <div
-          className={`w-full h-full flex flex-col items-center justify-center p-4 transition-transform duration-base ${
-            isMirrored ? 'scale-x-[-1]' : ''
-          }`}
+          className="w-full h-full flex flex-col items-center justify-center p-4 transition-transform duration-base"
+          style={{ transform: isMirrored ? 'scaleX(-1)' : undefined }}
         >
           {/* Flat-vector Signer Avatar */}
           <svg

@@ -91,7 +91,7 @@ export const LearningNodeCard: React.FC<LearningNodeCardProps> = ({
       onClick={handleClick}
       disabled={isLocked}
       aria-label={`${sign.gloss} - ${status}. ${isLocked ? unlockRequirement : ''}`}
-      className={`w-full min-h-node text-left bg-surface-card rounded-card border-adaptive pad-adaptive-control shadow-low flex items-center gap-3 transition-all duration-base cursor-pointer focus-ring-adaptive hover:translate-y-[-2px] disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`w-full min-h-node text-left bg-surface-card rounded-card border-adaptive pad-adaptive-control shadow-low flex items-center gap-3 transition-all duration-base cursor-pointer focus-ring-adaptive hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     >
       <div className="flex flex-1 items-center gap-3 min-w-0">
         <div

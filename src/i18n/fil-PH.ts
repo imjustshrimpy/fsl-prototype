@@ -296,6 +296,83 @@ export const filPH = {
     educatorTitle: 'Bilang guro',
     educatorDescription: 'Adult mode na may mga tool para sa pag-usad ng klase.',
     continue: 'Magpatuloy',
+    back: 'Bumalik',
+    finish: 'Tapusin ang setup',
+    stepLabels: {
+      roleSelection: 'Role Selection',
+      focus: 'Focus',
+      commitment: 'Commitment',
+      strictness: 'Strictness',
+      sensory: 'Sensory',
+      setupComplete: 'Setup Complete',
+    },
+    summary: {
+      profile: 'Profile',
+      preferences: 'Preferences',
+      goal: 'Goal',
+      commitment: 'Commitment',
+      strictness: 'Strictness',
+      sensory: 'Sensory',
+    },
+    steps: {
+      identity: {
+        title: 'Sino ang matututo ngayon?',
+        description: 'Piliin ang profile na pinakaangkop sa setup na ito.',
+      },
+      goal: {
+        title: 'Pangunahing layunin',
+        description: 'Piliin ang konteksto ng pagkatuto na mag-uulit ng unang mga aralin.',
+      },
+      pace: {
+        title: 'Araw-araw na commitment',
+        description: 'Itakda ang bilis ng pagsasanay ayon sa oras na maaari mong maglaan.',
+      },
+      strictness: {
+        title: 'Katigasan ng feedback',
+        description: 'Piliin kung gaano ka-strict ang pag-check ng senyas.',
+      },
+      sensory: {
+        title: 'Audio at sensory mode',
+        description: 'Piliin kung paano dapat lumabas ang visual, haptic, at audio cues.',
+      },
+      complete: {
+        title: 'Tapos na ang setup',
+        description: 'Suriin ang napiling profile at mga kagustuhan bago magpatuloy.',
+      },
+    },
+    goal: {
+      family: { label: 'Pamilya at Tahanan', detail: 'Gawain sa bahay, damdamin, at pang-araw-araw na routine.' },
+      school: { label: 'Paaralan at Akademik', detail: 'Mga salita sa silid-aralan at mga gawain sa pag-aaral.' },
+      community: { label: 'Komunidad at Adbokasiya', detail: 'Pangkomunidad na pakikipag-ugnayan at pagtulong sa kapwa.' },
+      workplace: { label: 'Propesyonal at Trabaho', detail: 'Mga pormal na salita at pakikipag-chat sa opisina.' },
+    },
+    commitment: {
+      casual: { label: 'Casual — 5 minuto / araw', detail: 'Isang maikling sitwasyon at light review.' },
+      regular: { label: 'Regular — 10 minuto / araw', detail: 'Dalawang sitwasyon at isang review drill.' },
+      serious: { label: 'Serious — 15 minuto / araw', detail: 'Tatlong sitwasyon at mas malalim na check ng error.' },
+      intensive: { label: 'Intensive — 20+ minuto / araw', detail: 'Buong chapter run at retry vault.' },
+    },
+    strictness: {
+      encouraging: { label: 'Encouraging / Forgiving', detail: 'Mas malawak na tolerance at mas mahinhin na confidence threshold.' },
+      balanced: { label: 'Balanced (Default)', detail: 'Karaniwang pagsusuri na may tamang inaasahang accuracy.' },
+      strict: { label: 'Precision / Strict', detail: 'Mataas na threshold at mas tiyak na pagwawasto ng mga error.' },
+    },
+    sensory: {
+      visualAudio: { label: 'Visual + Audio Cues', detail: 'Nakabukas ang tunog, captions, at visual prompts.' },
+      visualHaptics: { label: 'Visual + Haptics Lang', detail: 'Silent mode na may vibration at text-based cues.' },
+      readability: { label: 'Text at High Readability', detail: 'Minimal motion, mas malakas na contrast, at static feedback.' },
+    },
+    camera: {
+      mirror: { label: 'Mirror View (First-Person)', detail: 'Direktang first-person na view para madaling gayahin.' },
+      observer: { label: 'Observer View (Third-Person)', detail: 'View na para sa classroom at social sign use.' },
+      multiview: { label: 'Multi-Angle / 3D', detail: 'Side-view at slow breakdown para sa pagsusuri.' },
+    },
+    notifications: {
+      morningMascot: { label: 'Morning nudge • Mascot', detail: '8:00 AM na paalala na may playful mascot prompt.' },
+      afternoonDirect: { label: 'Afternoon nudge • Direct', detail: '12:00 PM na maikling goal-based reminder.' },
+      eveningDirect: { label: 'Evening nudge • Direct', detail: '7:00 PM na recap at quick next-step guidance.' },
+      off: { label: 'Off', detail: 'Walang device nudges o alert prompts.' },
+    },
   },
   common: {
     locked: 'Nakatrangka',
