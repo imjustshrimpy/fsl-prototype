@@ -51,7 +51,7 @@ export const AppContent: React.FC = () => {
       if (activeTab === 'settings') {
         return <SettingsPage onRestartSetup={restartOnboarding} />;
       }
-      return <ProgressPage />;
+      return <ProgressPage initialInstructorTab={activeTab === 'progress' ? 'grades' : 'stream'} />;
     }
 
     if (activeTab === 'home') {

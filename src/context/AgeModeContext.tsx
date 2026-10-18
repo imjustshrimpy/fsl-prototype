@@ -54,7 +54,7 @@ const ADULT_NAV: NavItemConfig[] = [
 
 const EDUCATOR_NAV: NavItemConfig[] = [
   { id: 'home', labelKey: 'nav.educator.classroom', iconName: 'home' },
-  { id: 'progress', labelKey: 'nav.adult.progress', iconName: 'bar-chart' },
+  { id: 'progress', labelKey: 'nav.educator.progress', iconName: 'bar-chart' },
   { id: 'settings', labelKey: 'nav.adult.settings', iconName: 'settings' },
 ];
 

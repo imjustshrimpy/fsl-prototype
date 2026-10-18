@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAgeMode } from '../context/AgeModeContext';
 import { useTranslation } from '../i18n';
 import { MOCK_BADGES, MOCK_EDUCATOR_ROSTER, MOCK_FAMILY_SUMMARY, StudentRosterItem } from '../data/mock-data';
@@ -29,6 +29,10 @@ import {
 
 type InstructorTab = 'stream' | 'classwork' | 'people' | 'grades';
 
+interface ProgressPageProps {
+  initialInstructorTab?: InstructorTab;
+}
+
 type GradeReviewState = {
   studentName: string;
   assignmentKey: string;
@@ -36,13 +40,17 @@ type GradeReviewState = {
   currentScore: string;
 } | null;
 
-export const ProgressPage: React.FC = () => {
+export const ProgressPage: React.FC<ProgressPageProps> = ({ initialInstructorTab = 'stream' }) => {
   const { role, isKids } = useAgeMode();
   const { t } = useTranslation();
 
   const [showDataTable, setShowDataTable] = useState<boolean>(false);
   const [exportNotice, setExportNotice] = useState<string | null>(null);
-  const [instructorTab, setInstructorTab] = useState<InstructorTab>('stream');
+  const [instructorTab, setInstructorTab] = useState<InstructorTab>(initialInstructorTab);
+
+  useEffect(() => {
+    setInstructorTab(initialInstructorTab);
+  }, [initialInstructorTab]);
   const [copiedInvite, setCopiedInvite] = useState(false);
   const [portfolioStudent, setPortfolioStudent] = useState<StudentRosterItem | null>(null);
   const [reviewState, setReviewState] = useState<GradeReviewState>(null);
@@ -205,12 +213,77 @@ export const ProgressPage: React.FC = () => {
     },
   ];
 
+  const classAverageAccuracy = Math.round(
+    MOCK_EDUCATOR_ROSTER.reduce((total, student) => total + student.accuracy, 0) / MOCK_EDUCATOR_ROSTER.length,
+  );
+  const averageResponseSpeed = (
+    MOCK_EDUCATOR_ROSTER.reduce((total, student) => total + student.avgTimeSeconds, 0) / MOCK_EDUCATOR_ROSTER.length
+  ).toFixed(1);
+  const atRiskLearners = MOCK_EDUCATOR_ROSTER.filter((student) => student.accuracy < 75);
+  const gradebookAssignments = ['gateHello', 'askRepeat', 'medicalEmergency'] as const;
+  const submittedAssignmentCount = gradebookRows.reduce(
+    (total, row) => total + gradebookAssignments.filter((assignment) => row[assignment] !== 'Missing').length,
+    0,
+  );
+  const totalAssignmentCount = gradebookRows.length * gradebookAssignments.length;
+  const completionRate = Math.round(
+    (submittedAssignmentCount / totalAssignmentCount) * 100,
+  );
+  const strongestLearner = [...MOCK_EDUCATOR_ROSTER].sort((a, b) => b.accuracy - a.accuracy)[0] ?? MOCK_EDUCATOR_ROSTER[0];
+  const weeklyTrend = [
+    { value: 68 },
+    { value: 71 },
+    { value: 77 },
+    { value: 80 },
+    { value: 84 },
+    { value: 88 },
+    { value: 90 },
+  ];
+
+  const overviewMetrics = [
+    {
+      label: t('instructor.overview.classMastery'),
+      value: `${classAverageAccuracy}%`,
+      delta: t('instructor.overview.rosterCount', { count: MOCK_EDUCATOR_ROSTER.length }),
+      detail: t('instructor.overview.classSummary', { student: strongestLearner.name }),
+    },
+    {
+      label: t('instructor.overview.submissionRate'),
+      value: `${completionRate}%`,
+      delta: t('instructor.overview.submissionCount', {
+        submitted: submittedAssignmentCount,
+        total: totalAssignmentCount,
+      }),
+      detail: t('instructor.overview.submissionSummary'),
+    },
+    {
+      label: t('instructor.overview.atRiskLearners'),
+      value: `${atRiskLearners.length}`,
+      delta: t('instructor.overview.needsCheckIn'),
+      detail: t('instructor.overview.atRiskSummary', { count: atRiskLearners.length }),
+    },
+    {
+      label: t('instructor.overview.avgResponse'),
+      value: `${averageResponseSpeed}s`,
+      delta: t('instructor.overview.fast'),
+      detail: t('instructor.overview.responseSummary'),
+    },
+  ];
+
+  const supportQueue = atRiskLearners.map((student) => ({ name: student.name, focus: student.weakSign }));
+
   return (
     <div className="space-y-6 pb-24 max-w-3xl mx-auto">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-title-adaptive font-black text-text-primary tracking-tight">
-            {role === 'educator' ? t('progress.educatorTab') : role === 'family' ? t('progress.familyTab') : t('progress.learnerTab')}
+            {role === 'educator'
+              ? instructorTab === 'grades'
+                ? t('instructor.overview.title')
+                : t('progress.educatorTab')
+              : role === 'family'
+                ? t('progress.familyTab')
+                : t('progress.learnerTab')}
           </h2>
           <p className="text-body-adaptive text-text-secondary">
             {t('instructor.headerCaption')} <span className="font-bold text-brand-blue uppercase tracking-tighter">{role}</span>
@@ -238,19 +311,19 @@ export const ProgressPage: React.FC = () => {
         <div className="space-y-5">
           <section className="overflow-hidden rounded-card border-adaptive bg-surface-card shadow-low">
             <div className="bg-brand-blue px-4 py-5 text-on-brand-blue">
-              <div className="flex items-start justify-between gap-3">
-                <div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-caption-adaptive uppercase tracking-[0.12em] text-on-brand-blue/80">
                     {t('instructor.subjectLabel')}
                   </p>
-                  <h3 className="mt-1 text-title-adaptive font-black text-on-brand-blue">
+                  <h3 className="mt-1 break-words text-title-adaptive font-black text-on-brand-blue">
                     {t('instructor.classTitle')}
                   </h3>
                 </div>
                 <Button
                   type="button"
                   variant="secondary"
-                  className="border border-white/30 bg-white/10 text-on-brand-blue"
+                  className="shrink-0 self-end whitespace-nowrap border border-white/30 bg-white/10 text-on-brand-blue sm:self-auto"
                   onClick={handleCopyInvite}
                 >
                   {copiedInvite ? <Check className="w-4 h-4" aria-hidden="true" /> : <Copy className="w-4 h-4" aria-hidden="true" />}
@@ -269,7 +342,7 @@ export const ProgressPage: React.FC = () => {
             </div>
 
             <div className="border-t border-adaptive px-3 py-2">
-              <nav className="flex gap-2 overflow-x-auto" aria-label={t('instructor.navLabel')}>
+              <nav className="grid grid-cols-2 gap-1 sm:grid-cols-4" aria-label={t('instructor.navLabel')}>
                 {instructorTabs.map((tab) => {
                   const isActive = tab.id === instructorTab;
                   return (
@@ -277,7 +350,8 @@ export const ProgressPage: React.FC = () => {
                       key={tab.id}
                       type="button"
                       onClick={() => setInstructorTab(tab.id)}
-                      className={`rounded-control px-3 py-2 text-caption-adaptive font-bold transition ${
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`min-w-0 rounded-control px-1 py-2 text-center text-caption-adaptive font-bold leading-tight transition whitespace-normal break-words ${
                         isActive ? 'bg-brand-blue text-on-brand-blue shadow-low' : 'bg-surface-app text-text-secondary'
                       }`}
                     >
@@ -288,6 +362,84 @@ export const ProgressPage: React.FC = () => {
               </nav>
             </div>
           </section>
+
+          {instructorTab === 'grades' && <section className="@container space-y-4">
+            <div className="flex items-center gap-2 text-body-adaptive font-bold text-text-primary">
+              <BarChart className="w-5 h-5 text-brand-blue" aria-hidden="true" />
+              <span>{t('instructor.overview.title')}</span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 @xs:grid-cols-2">
+              {overviewMetrics.map((metric) => (
+                <Card key={metric.label} className="space-y-2">
+                  <p className="text-caption-adaptive uppercase tracking-[0.1em] text-text-secondary">{metric.label}</p>
+                  <div className="flex items-end justify-between gap-2">
+                    <span className="text-title-adaptive font-black text-text-primary">{metric.value}</span>
+                    <span className="rounded-pill bg-brand-blue/10 px-2 py-1 text-caption-adaptive font-bold text-brand-blue">
+                      {metric.delta}
+                    </span>
+                  </div>
+                  <p className="text-caption-adaptive text-text-secondary">{metric.detail}</p>
+                </Card>
+              ))}
+            </div>
+
+            <div className="grid gap-4">
+              <Card className="space-y-4 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-caption-adaptive uppercase tracking-[0.1em] text-text-secondary">
+                      {t('instructor.overview.trendTitle')}
+                    </p>
+                    <h4 className="mt-1 text-body-adaptive font-black text-text-primary">
+                      {t('instructor.overview.trendSummary')}
+                    </h4>
+                  </div>
+                  <span className="rounded-pill bg-brand-green/10 px-2 py-1 text-caption-adaptive font-bold text-brand-green">
+                    +22 pts
+                  </span>
+                </div>
+
+                <div className="flex items-end gap-2 pt-2">
+                  {weeklyTrend.map((point, index) => (
+                    <div key={`${index + 1}`} className="flex min-w-0 flex-1 flex-col items-center gap-2">
+                      <span className="text-caption-adaptive text-text-secondary">{point.value}%</span>
+                      <div
+                        className="w-full rounded-t-control bg-brand-blue/80"
+                        style={{ height: `${Math.max(point.value, 18)}px` }}
+                        aria-label={`${t('instructor.overview.weekLabel', { week: index + 1 })}: ${point.value}%`}
+                      />
+                      <span className="text-caption-adaptive text-text-secondary">{t('instructor.overview.weekLabel', { week: index + 1 })}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+
+              <Card className="space-y-3 p-4">
+                <div className="flex items-center gap-2 text-body-adaptive font-bold text-text-primary">
+                  <Users className="w-5 h-5 text-brand-orange" aria-hidden="true" />
+                  <span>{t('instructor.overview.supportTitle')}</span>
+                </div>
+
+                {supportQueue.map((student) => (
+                  <div key={student.name} className="rounded-control border-adaptive bg-surface-app p-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="min-w-0 break-words font-bold text-text-primary">{student.name}</p>
+                      <span className="max-w-full break-words rounded-pill bg-brand-orange/10 px-2 py-1 text-caption-adaptive font-bold text-brand-orange">
+                        {student.focus}
+                      </span>
+                    </div>
+                    <p className="mt-2 break-words text-caption-adaptive text-text-secondary">{t('instructor.overview.supportNote')}</p>
+                  </div>
+                ))}
+                {supportQueue.length === 0 && (
+                  <p className="rounded-control border-adaptive bg-surface-app p-3 text-caption-adaptive text-text-secondary">
+                    {t('instructor.overview.noSupportNeeded')}
+                  </p>
+                )}
+              </Card>
+            </div>
+          </section>}
 
           {instructorTab === 'stream' && (
             <div className="grid gap-5 lg:grid-cols-[1.65fr_0.9fr]">
