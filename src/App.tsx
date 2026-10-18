@@ -1,30 +1,82 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAgeMode } from './context/AgeModeContext';
 import { useTranslation } from './i18n';
-import { SignData } from './types';
-import { ModeToggle } from './components/adaptive/ModeToggle';
-import { RoleSwitcher } from './components/adaptive/RoleSwitcher';
+import { AgeMode, SignData, UserRole } from './types';
 import { BottomNavPill } from './components/adaptive/BottomNavPill';
 import { HomePage } from './pages/HomePage';
 import { LessonPage } from './pages/LessonPage';
 import { ScenariosPage } from './pages/ScenariosPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { OnboardingPage } from './pages/OnboardingPage';
 
 export const AppContent: React.FC = () => {
-  const { activeTab, setActiveTab, isKids } = useAgeMode();
+  const { activeTab, setActiveTab, isKids, setMode, setRole, role } = useAgeMode();
   const { t } = useTranslation();
 
   const [activeLessonSign, setActiveLessonSign] = useState<SignData | null>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const [onboardingComplete, setOnboardingComplete] = useState(() => {
+    try {
+      return localStorage.getItem('talinturo.onboardingComplete') === 'true';
+    } catch (e) {
+      return false;
+    }
+  });
+
+  const completeOnboarding = (mode: AgeMode, role: UserRole) => {
+    setMode(mode);
+    setRole(role);
+    setActiveTab('home');
+    try {
+      localStorage.setItem('talinturo.onboardingComplete', 'true');
+    } catch (e) {}
+    setOnboardingComplete(true);
+  };
+
+  const restartOnboarding = () => {
+    setActiveLessonSign(null);
+    try {
+      localStorage.removeItem('talinturo.onboardingComplete');
+    } catch (e) {}
+    setOnboardingComplete(false);
+  };
+
+  useEffect(() => {
+    if (mainRef.current) mainRef.current.scrollTop = 0;
+  }, [activeTab, activeLessonSign, onboardingComplete]);
+
+  const renderMainScreen = () => {
+    if (role === 'educator') {
+      if (activeTab === 'settings') {
+        return <SettingsPage onRestartSetup={restartOnboarding} />;
+      }
+      return <ProgressPage />;
+    }
+
+    if (activeTab === 'home') {
+      return (
+        <HomePage
+          onSelectSign={(sign) => setActiveLessonSign(sign)}
+          onOpenScenarios={() => setActiveTab('scenarios')}
+        />
+      );
+    }
+
+    if (activeTab === 'scenarios') return <ScenariosPage />;
+    if (activeTab === 'progress') return <ProgressPage />;
+    if (activeTab === 'settings') return <SettingsPage onRestartSetup={restartOnboarding} />;
+    return null;
+  };
 
   return (
-    <div className="min-h-screen bg-surface-app text-text-primary flex flex-col antialiased selection:bg-brand-yellow selection:text-text-primary">
+    <div className="mobile-app-shell bg-surface-app text-text-primary flex flex-col antialiased selection:bg-brand-yellow selection:text-text-primary">
       {/* Top Header Bar */}
-      <header className="sticky top-0 z-30 bg-surface-card border-b border-adaptive px-4 py-3 flex items-center justify-between gap-3 shadow-low">
-        <div className="flex items-center gap-2.5">
+      <header className="relative z-30 bg-surface-card border-b border-adaptive px-4 py-3 flex items-center shadow-low">
+        <div className="flex items-center gap-1.5 min-w-0">
           {/* Brand Mark */}
           <svg
-            className={`w-9 h-9 shrink-0 ${isKids ? 'text-brand-pink fill-current' : 'text-brand-blue fill-current'}`}
+            className={`w-7 h-7 shrink-0 ${isKids ? 'text-brand-pink fill-current' : 'text-brand-blue fill-current'}`}
             viewBox="0 0 32 32"
             aria-hidden="true"
           >
@@ -35,23 +87,19 @@ export const AppContent: React.FC = () => {
             <circle cx="16" cy="16" r="4" fill="currentColor" />
           </svg>
           <div>
-            <h1 className={`font-extrabold text-title-adaptive leading-tight tracking-tight ${isKids ? 'text-brand-pink' : 'text-text-primary'}`}>
+            <h1 className={`font-extrabold text-subtitle-adaptive leading-tight tracking-tight ${isKids ? 'text-brand-pink' : 'text-text-primary'}`}>
               Talinturo
             </h1>
-            <p className="text-micro text-text-secondary hidden sm:block">{t('app.tagline')}</p>
+            <p className="text-micro text-text-secondary hidden">{t('app.tagline')}</p>
           </div>
-        </div>
-
-        {/* Global Mode Toggle & Role Switcher */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <RoleSwitcher />
-          <ModeToggle />
         </div>
       </header>
 
       {/* 3. Main Screen Viewport */}
-      <main className="flex-1 w-full max-w-2xl mx-auto p-4 sm:p-6 overflow-y-auto">
-        {activeLessonSign ? (
+      <main ref={mainRef} className="min-h-0 flex-1 w-full p-4 overflow-y-auto overscroll-contain">
+        {!onboardingComplete ? (
+          <OnboardingPage onComplete={completeOnboarding} />
+        ) : activeLessonSign ? (
           <LessonPage
             sign={activeLessonSign}
             onBack={() => setActiveLessonSign(null)}
@@ -61,28 +109,12 @@ export const AppContent: React.FC = () => {
             }}
           />
         ) : (
-          <>
-            {activeTab === 'home' && (
-              <HomePage
-                onSelectSign={(sign) => setActiveLessonSign(sign)}
-                onOpenScenarios={() => setActiveTab('scenarios')}
-              />
-            )}
-            {activeTab === 'scenarios' && <ScenariosPage />}
-            {activeTab === 'practice' && (
-              <HomePage
-                onSelectSign={(sign) => setActiveLessonSign(sign)}
-                onOpenScenarios={() => setActiveTab('scenarios')}
-              />
-            )}
-            {activeTab === 'progress' && <ProgressPage />}
-            {activeTab === 'settings' && <SettingsPage />}
-          </>
+          renderMainScreen()
         )}
       </main>
 
       {/* 4. Bottom Navigation Pill */}
-      <BottomNavPill />
+      {onboardingComplete && <BottomNavPill />}
     </div>
   );
 };

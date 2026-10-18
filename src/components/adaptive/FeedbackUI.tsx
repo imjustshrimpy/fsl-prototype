@@ -102,7 +102,7 @@ export const FeedbackUI: React.FC<FeedbackUIProps> = ({
               >
                 <div className="flex items-center gap-2">
                   <span
-                    className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-micro font-bold ${
+                    className={`w-3.5 h-3.5 rounded-avatar flex items-center justify-center text-micro font-bold ${
                       isGood
                         ? 'bg-brand-green text-on-brand-green'
                         : 'bg-brand-yellow text-on-brand-yellow'
@@ -124,27 +124,27 @@ export const FeedbackUI: React.FC<FeedbackUIProps> = ({
       </div>
 
       {/* Primary Actions: Try Again is always primary when not recognized; Next when recognized */}
-      <div className="flex flex-col sm:flex-row items-center gap-2 pt-2">
+      <div className="flex flex-col items-stretch gap-2 pt-2">
         {isRecognized ? (
-          <Button variant="primary" onClick={onNext} className="w-full sm:flex-1 font-bold">
+          <Button variant="primary" onClick={onNext} className="w-full font-bold">
             <span>{t('feedback.nextBtn')}</span>
             <ChevronRight className="w-5 h-5" />
           </Button>
         ) : (
-          <Button variant="primary" onClick={onTryAgain} className="w-full sm:flex-1 font-bold">
+          <Button variant="primary" onClick={onTryAgain} className="w-full font-bold">
             <RefreshCw className="w-4 h-4" />
             <span>{t('feedback.tryAgainBtn')}</span>
           </Button>
         )}
 
         {!isRecognized && (
-          <Button variant="secondary" onClick={onNext} className="w-full sm:w-auto">
+          <Button variant="secondary" onClick={onNext} className="w-full">
             <span>{t('feedback.nextBtn')}</span>
           </Button>
         )}
 
         {onSkip && (
-          <Button variant="ghost" onClick={onSkip} className="w-full sm:w-auto text-text-secondary">
+          <Button variant="ghost" onClick={onSkip} className="w-full text-text-secondary">
             <span>{t('feedback.skipBtn')}</span>
           </Button>
         )}

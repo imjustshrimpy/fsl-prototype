@@ -27,12 +27,12 @@ export const StatGrid: React.FC<StatGridProps> = ({
     return (
       <div className={`grid grid-cols-2 gap-3 ${className}`}>
         {/* Kids Stars Collector */}
-        <div className="bg-brand-yellow text-on-brand-yellow pad-adaptive-control rounded-card border-adaptive shadow-low transition-all duration-base flex items-center gap-3">
-          <div className="w-12 h-12 rounded-avatar bg-surface-card flex items-center justify-center shrink-0 border border-mode">
-            <Star className="w-7 h-7 text-brand-orange fill-brand-yellow" aria-hidden="true" />
+        <div className="bg-brand-yellow text-on-brand-yellow pad-adaptive-control rounded-card border-adaptive shadow-low transition-all duration-base flex flex-col items-start gap-2">
+          <div className="w-10 h-10 rounded-avatar bg-surface-card flex items-center justify-center shrink-0 border border-mode">
+            <Star className="w-6 h-6 text-brand-orange fill-brand-yellow" aria-hidden="true" />
           </div>
-          <div>
-            <div className="text-caption-adaptive font-bold uppercase tracking-wider">
+          <div className="w-full min-w-0">
+            <div className="text-caption-adaptive font-bold uppercase tracking-wider break-words">
               {t('stats.stars')}
             </div>
             <div className="text-title-adaptive font-black tracking-tight" aria-label={`${stars} stars collected`}>
@@ -42,11 +42,11 @@ export const StatGrid: React.FC<StatGridProps> = ({
         </div>
 
         {/* Kids Streak / Badges Collector */}
-        <div className="bg-brand-pink text-on-brand-pink pad-adaptive-control rounded-card border-adaptive shadow-low transition-all duration-base flex items-center gap-3">
-          <div className="w-12 h-12 rounded-avatar bg-surface-card flex items-center justify-center shrink-0 border border-mode">
-            <Flame className="w-7 h-7 text-brand-orange fill-brand-orange" aria-hidden="true" />
+        <div className="bg-brand-pink text-on-brand-pink pad-adaptive-control rounded-card border-adaptive shadow-low transition-all duration-base flex flex-col items-start gap-2">
+          <div className="w-10 h-10 rounded-avatar bg-surface-card flex items-center justify-center shrink-0 border border-mode">
+            <Flame className="w-6 h-6 text-brand-orange fill-brand-orange" aria-hidden="true" />
           </div>
-          <div>
+          <div className="w-full min-w-0">
             <div className="text-caption-adaptive font-bold uppercase tracking-wider">
               {t('stats.streak')}
             </div>
@@ -60,7 +60,7 @@ export const StatGrid: React.FC<StatGridProps> = ({
   }
 
   return (
-    <div className={`grid grid-cols-2 sm:grid-cols-4 gap-3 ${className}`}>
+    <div className={`grid grid-cols-2 gap-3 ${className}`}>
       {/* Signs Learned */}
       <div className="bg-surface-card pad-adaptive-control rounded-card border-adaptive shadow-low transition-all duration-base hover:shadow-mid group">
         <div className="flex items-center gap-1.5 text-text-secondary text-caption-adaptive mb-1 group-hover:text-brand-blue transition-colors">
@@ -89,11 +89,11 @@ export const StatGrid: React.FC<StatGridProps> = ({
           <Flame className="w-4 h-4 text-brand-orange group-hover:text-brand-yellow" aria-hidden="true" />
           <span>{t('stats.streak')}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col items-start gap-1">
           <span className="text-title-adaptive font-bold text-text-primary tabular-nums">{streak} d</span>
-          <span title={t('stats.freezeNotice')} className="text-caption-adaptive bg-surface-app p-1 rounded-pill border-adaptive">
-            <Shield className="w-3.5 h-3.5 text-brand-blue" aria-label={t('stats.freezeNotice')} />
-            <span className="ml-1">{t('stats.freezeNotice')}</span>
+          <span title={t('stats.freezeNotice')} className="max-w-full inline-flex items-start gap-1.5 text-caption-adaptive bg-surface-app px-1.5 py-1 rounded-control border-adaptive leading-tight">
+            <Shield className="w-3.5 h-3.5 shrink-0 mt-0.5 text-brand-blue" aria-hidden="true" />
+            <span>{t('stats.freezeNotice')}</span>
           </span>
         </div>
       </div>

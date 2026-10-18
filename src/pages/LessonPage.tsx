@@ -99,7 +99,7 @@ export const LessonPage: React.FC<LessonPageProps> = ({
                 </div>
                 <button
                   onClick={() => setStep('watch')}
-                  className="text-caption-adaptive font-bold text-brand-blue hover:underline cursor-pointer"
+                  className="text-caption-adaptive font-bold text-brand-blue hover:underline cursor-pointer min-h-touch"
                 >
                   Watch Guide Again
                 </button>
@@ -124,7 +124,7 @@ export const LessonPage: React.FC<LessonPageProps> = ({
           >
             <div className="flex justify-center">
               <div
-                className={`w-28 h-28 rounded-full mx-auto flex items-center justify-center text-5xl shadow-inner border border-adaptive ${isKids ? 'bg-brand-yellow text-on-brand-yellow' : 'bg-brand-blue text-on-brand-blue'}`}
+                className={`w-28 h-28 rounded-avatar mx-auto flex items-center justify-center text-5xl shadow-inner border border-adaptive ${isKids ? 'bg-brand-yellow text-on-brand-yellow' : 'bg-brand-blue text-on-brand-blue'}`}
               >
                 {isKids ? '🌟' : <Award className="w-14 h-14" />}
               </div>

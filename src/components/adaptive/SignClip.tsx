@@ -158,7 +158,7 @@ export const SignClip: React.FC<SignClipProps> = ({
 
           {/* Offline / Cache Indicator */}
           <div className="absolute top-3 right-3 bg-surface-card text-text-secondary px-2.5 py-1 rounded-pill text-caption-adaptive border-adaptive shadow-low flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-brand-green" aria-hidden="true"></span>
+            <span className="w-2 h-2 rounded-avatar bg-brand-green" aria-hidden="true"></span>
             <span>{t('player.offline')}</span>
           </div>
         </div>
@@ -183,8 +183,8 @@ export const SignClip: React.FC<SignClipProps> = ({
       </div>
 
       {/* Control Bar (Large targets meeting touch guidelines) */}
-      <div className="p-3 bg-surface-card flex flex-wrap items-center justify-between gap-2 border-t border-adaptive">
-        <div className="flex items-center gap-2">
+      <div className="grid grid-cols-1 justify-items-center gap-2 p-3 bg-surface-card border-t border-adaptive">
+        <div className="grid w-full grid-cols-3 gap-2">
           {/* Play / Pause Toggle */}
           <IconButton
             aria-label={isPlaying ? t('player.pause') : t('player.play')}
@@ -259,7 +259,7 @@ export const SignClip: React.FC<SignClipProps> = ({
           <div className="font-bold text-caption-adaptive text-text-secondary mb-2 uppercase tracking-wider">
             {t('player.parametersTitle')}
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-1 mb-2">
+          <div className="grid grid-cols-2 gap-1 mb-2">
             {(['handshape', 'movement', 'location', 'palmOrientation', 'nonManual'] as const).map((param) => (
               <button
                 key={param}

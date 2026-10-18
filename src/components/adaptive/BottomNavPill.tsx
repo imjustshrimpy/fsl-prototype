@@ -7,7 +7,6 @@ import {
   Home,
   Play,
   MessageSquare,
-  Video,
   BarChart3,
   Settings,
   Star,
@@ -27,8 +26,6 @@ export const BottomNavPill: React.FC = () => {
         return <Play {...iconProps} />;
       case 'message-square':
         return <MessageSquare {...iconProps} />;
-      case 'video':
-        return <Video {...iconProps} />;
       case 'bar-chart':
         return <BarChart3 {...iconProps} />;
       case 'settings':
@@ -45,9 +42,9 @@ export const BottomNavPill: React.FC = () => {
   return (
     <nav
       aria-label="Main Navigation"
-      className="fixed bottom-0 left-0 right-0 z-40 p-2 sm:p-3 pointer-events-none flex justify-center"
+      className="absolute bottom-0 left-0 right-0 z-40 px-2 pt-2 pad-safe-bottom pointer-events-none flex justify-center"
     >
-      <div className="w-full max-w-lg bg-surface-card border-adaptive rounded-pill shadow-high p-1 flex items-center justify-around pointer-events-auto backdrop-blur-md">
+      <div className="w-full bg-surface-card border-adaptive rounded-pill shadow-high p-1 flex items-center justify-around pointer-events-auto backdrop-blur-md">
         {navItems.map((item) => {
           const isActive = activeTab === item.id;
           return (

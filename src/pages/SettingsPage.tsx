@@ -2,8 +2,7 @@ import React from 'react';
 import { useAgeMode } from '../context/AgeModeContext';
 import { useTranslation } from '../i18n';
 import { Card } from '../components/primitives/Card';
-import { ModeToggle } from '../components/adaptive/ModeToggle';
-import { RoleSwitcher } from '../components/adaptive/RoleSwitcher';
+import { Button } from '../components/primitives/Button';
 import {
   Sliders,
   Eye,
@@ -15,8 +14,12 @@ import {
   Languages,
 } from 'lucide-react';
 
-export const SettingsPage: React.FC = () => {
-  const { accessibility, updateAccessibility } = useAgeMode();
+interface SettingsPageProps {
+  onRestartSetup: () => void;
+}
+
+export const SettingsPage: React.FC<SettingsPageProps> = ({ onRestartSetup }) => {
+  const { accessibility, updateAccessibility, isKids, role } = useAgeMode();
   const { locale, setLocale, t } = useTranslation();
 
   return (
@@ -32,28 +35,21 @@ export const SettingsPage: React.FC = () => {
 
       {/* 1. Mode & Role Controls */}
       <Card className="space-y-4">
-        <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <div className="font-bold text-body-adaptive text-text-primary">
-              {t('settings.ageModeLabel')}
+              {t('settings.setupLabel')}
             </div>
             <div className="text-caption-adaptive text-text-secondary">
-              {t('settings.ageModeDesc')}
+              {t('settings.setupSummary', {
+                mode: t(isKids ? 'settings.kidsMode' : 'settings.adultMode'),
+                role: t(`settings.roles.${role}`),
+              })}
             </div>
           </div>
-          <ModeToggle />
-        </div>
-
-        <div className="border-t border-adaptive pt-3 flex items-center justify-between flex-wrap gap-2">
-          <div>
-            <div className="font-bold text-body-adaptive text-text-primary">
-              {t('settings.roleLabel')}
-            </div>
-            <div className="text-caption-adaptive text-text-secondary">
-              Switch role view (Learner, Educator, Family)
-            </div>
-          </div>
-          <RoleSwitcher />
+          <Button variant="secondary" onClick={onRestartSetup} className="w-full">
+            {t('settings.changeSetup')}
+          </Button>
         </div>
 
         {/* Language Selection */}
@@ -69,7 +65,7 @@ export const SettingsPage: React.FC = () => {
           <div className="flex items-center gap-1 bg-surface-app p-1 rounded-pill border-adaptive">
             <button
               onClick={() => setLocale('en-PH')}
-              className={`px-3 py-1 rounded-pill text-caption-adaptive font-bold cursor-pointer ${
+              className={`px-3 py-1 rounded-pill text-caption-adaptive font-bold cursor-pointer min-h-touch ${
                 locale === 'en-PH' ? 'bg-brand-blue text-on-brand-blue' : 'text-text-secondary'
               }`}
             >
@@ -77,7 +73,7 @@ export const SettingsPage: React.FC = () => {
             </button>
             <button
               onClick={() => setLocale('fil-PH')}
-              className={`px-3 py-1 rounded-pill text-caption-adaptive font-bold cursor-pointer ${
+              className={`px-3 py-1 rounded-pill text-caption-adaptive font-bold cursor-pointer min-h-touch ${
                 locale === 'fil-PH' ? 'bg-brand-blue text-on-brand-blue' : 'text-text-secondary'
               }`}
             >
@@ -108,7 +104,7 @@ export const SettingsPage: React.FC = () => {
             checked={accessibility.captions}
             onChange={(e) => updateAccessibility({ captions: e.target.checked })}
             aria-label={t('settings.captionsLabel')}
-            className="w-6 h-6 rounded-control text-brand-blue cursor-pointer"
+            className="w-6 h-6 adaptive-checkbox cursor-pointer focus-ring-adaptive"
           />
         </div>
 
@@ -126,7 +122,7 @@ export const SettingsPage: React.FC = () => {
             checked={accessibility.hapticsEnabled}
             onChange={(e) => updateAccessibility({ hapticsEnabled: e.target.checked })}
             aria-label={t('settings.hapticsLabel')}
-            className="w-6 h-6 rounded-control text-brand-blue cursor-pointer"
+            className="w-6 h-6 adaptive-checkbox cursor-pointer focus-ring-adaptive"
           />
         </div>
 
@@ -144,7 +140,7 @@ export const SettingsPage: React.FC = () => {
             checked={accessibility.highContrast}
             onChange={(e) => updateAccessibility({ highContrast: e.target.checked })}
             aria-label={t('settings.highContrastLabel')}
-            className="w-6 h-6 rounded-control text-brand-blue cursor-pointer"
+            className="w-6 h-6 adaptive-checkbox cursor-pointer focus-ring-adaptive"
           />
         </div>
 
@@ -162,7 +158,7 @@ export const SettingsPage: React.FC = () => {
             checked={accessibility.reducedMotion}
             onChange={(e) => updateAccessibility({ reducedMotion: e.target.checked })}
             aria-label={t('settings.reducedMotionLabel')}
-            className="w-6 h-6 rounded-control text-brand-blue cursor-pointer"
+            className="w-6 h-6 adaptive-checkbox cursor-pointer focus-ring-adaptive"
           />
         </div>
 
@@ -181,7 +177,7 @@ export const SettingsPage: React.FC = () => {
               <button
                 key={size}
                 onClick={() => updateAccessibility({ textSize: size })}
-                className={`px-3 py-1 rounded-pill text-caption-adaptive font-bold cursor-pointer ${
+                className={`px-3 py-1 rounded-pill text-caption-adaptive font-bold cursor-pointer min-h-touch ${
                   accessibility.textSize === size ? 'bg-brand-blue text-on-brand-blue' : 'text-text-secondary'
                 }`}
               >
@@ -205,7 +201,7 @@ export const SettingsPage: React.FC = () => {
             checked={accessibility.optionalSoundEffects}
             onChange={(e) => updateAccessibility({ optionalSoundEffects: e.target.checked })}
             aria-label={t('settings.soundLabel')}
-            className="w-6 h-6 rounded-control text-brand-blue cursor-pointer"
+            className="w-6 h-6 adaptive-checkbox cursor-pointer focus-ring-adaptive"
           />
         </div>
       </Card>

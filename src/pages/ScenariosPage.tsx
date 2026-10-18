@@ -107,7 +107,7 @@ export const ScenariosPage: React.FC = () => {
         {/* Scenario Completion Summary */}
         {isScenarioFinished ? (
           <div className="bg-surface-card rounded-card border-adaptive p-6 text-center space-y-5 shadow-lg">
-            <div className="w-20 h-20 rounded-full bg-brand-green text-on-brand-green mx-auto flex items-center justify-center text-3xl shadow-low">
+            <div className="w-20 h-20 rounded-avatar bg-brand-green text-on-brand-green mx-auto flex items-center justify-center text-3xl shadow-low">
               <CheckCircle2 className="w-10 h-10" />
             </div>
 
@@ -212,7 +212,7 @@ export const ScenariosPage: React.FC = () => {
       </div>
 
       {/* Category Filter Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+      <div className="flex flex-wrap items-center gap-2">
         {['all', 'household', 'school', 'public', 'emergency'].map((cat) => (
           <button
             key={cat}
@@ -238,13 +238,13 @@ export const ScenariosPage: React.FC = () => {
               setCurrentStepIndex(0);
               setIsScenarioFinished(false);
             }}
-            className="w-full text-left bg-surface-card rounded-card border-adaptive pad-adaptive-control shadow-low transition-all duration-base cursor-pointer hover:shadow-mid hover:-translate-y-0.5 focus-ring-adaptive group"
+            className="flex w-full items-center gap-3 text-left bg-surface-card rounded-card border-adaptive pad-adaptive-control shadow-low transition-all duration-base cursor-pointer hover:shadow-mid hover:-translate-y-0.5 focus-ring-adaptive group"
           >
-            <div className="flex items-start gap-3.5 min-w-0">
+            <div className="flex min-w-0 flex-1 items-start gap-3.5">
               <div className="w-12 h-12 rounded-avatar bg-surface-app border-adaptive flex items-center justify-center shrink-0 text-xl group-hover:scale-105 transition-transform">
                 {getCategoryIcon(scen.category)}
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-caption-adaptive font-bold uppercase tracking-wider text-brand-blue">
                     {scen.category}
@@ -253,16 +253,15 @@ export const ScenariosPage: React.FC = () => {
                     · {scen.steps.length} Turns
                   </span>
                 </div>
-                <div className="text-title-adaptive font-bold text-text-primary truncate">
+                <div className="text-title-adaptive font-bold leading-tight text-text-primary">
                   {scen.title}
                 </div>
                 <div className="text-body-adaptive text-text-secondary line-clamp-2 mt-0.5">
                   {scen.situation}
                 </div>
               </div>
+              <ChevronRight className="w-6 h-6 text-text-secondary shrink-0 group-hover:text-brand-blue transition-colors" aria-hidden="true" />
             </div>
-
-            <ChevronRight className="w-6 h-6 text-text-secondary shrink-0 group-hover:text-brand-blue transition-colors" aria-hidden="true" />
           </button>
         ))}
       </div>

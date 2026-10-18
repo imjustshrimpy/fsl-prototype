@@ -67,7 +67,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectSign, onOpenScenario
   );
 
   return (
-    <div className="space-y-0 pb-24">
+    <div className="space-y-4 pb-24">
       {/* 1. Adaptive Hero Card */}
       <AdaptiveHeroCard
         onStartPractice={() => onSelectSign(recommendedSign)}
@@ -100,8 +100,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectSign, onOpenScenario
           </div>
           <div className="pb-2">
             <div className="grid grid-cols-1 gap-2.5">
-              {recommendation.weakAreas.map((wa: { signId: string; parameter: string; reason: string }) => {
-                const sign = SIGN_MANIFEST.find((s: SignData) => s.id === wa.signId);
+              {[...new Set(recommendation.weakAreas.map((area) => area.signId))].map((signId) => {
+                const sign = SIGN_MANIFEST.find((s: SignData) => s.id === signId);
                 if (!sign) return null;
                 return (
                   <LearningNodeCard
@@ -130,7 +130,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectSign, onOpenScenario
             </div>
             <button
               onClick={onOpenScenarios}
-              className="text-caption-adaptive font-bold text-brand-blue flex items-center gap-1 hover:underline cursor-pointer"
+              className="text-caption-adaptive font-bold text-brand-blue flex items-center gap-1 hover:underline cursor-pointer min-h-touch"
             >
               <Compass className="w-4 h-4" aria-hidden="true" />
               <span>Explore Scenarios</span>

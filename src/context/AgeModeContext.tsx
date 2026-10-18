@@ -1,12 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { AgeMode, UserRole, AccessibilityPreferences } from '../types';
 
-export const SHOW_MODE_TOGGLE = true;
-
 interface NavItemConfig {
   id: string;
   labelKey: string;
-  iconName: 'home' | 'play' | 'message-square' | 'video' | 'bar-chart' | 'settings' | 'star' | 'user';
+  iconName: 'home' | 'play' | 'message-square' | 'bar-chart' | 'settings' | 'star' | 'user';
 }
 
 interface SignPlayerDefaults {
@@ -19,7 +17,6 @@ interface SignPlayerDefaults {
 interface AgeModeContextType {
   mode: AgeMode;
   setMode: (mode: AgeMode) => void;
-  toggleMode: () => void;
   isKids: boolean;
   isAdult: boolean;
   role: UserRole;
@@ -51,7 +48,12 @@ const KIDS_NAV: NavItemConfig[] = [
 const ADULT_NAV: NavItemConfig[] = [
   { id: 'home', labelKey: 'nav.adult.home', iconName: 'home' },
   { id: 'scenarios', labelKey: 'nav.adult.scenarios', iconName: 'message-square' },
-  { id: 'practice', labelKey: 'nav.adult.practice', iconName: 'video' },
+  { id: 'progress', labelKey: 'nav.adult.progress', iconName: 'bar-chart' },
+  { id: 'settings', labelKey: 'nav.adult.settings', iconName: 'settings' },
+];
+
+const EDUCATOR_NAV: NavItemConfig[] = [
+  { id: 'home', labelKey: 'nav.educator.classroom', iconName: 'home' },
   { id: 'progress', labelKey: 'nav.adult.progress', iconName: 'bar-chart' },
   { id: 'settings', labelKey: 'nav.adult.settings', iconName: 'settings' },
 ];
@@ -97,10 +99,6 @@ export const AgeModeProvider: React.FC<{ children: React.ReactNode }> = ({ child
       document.documentElement.dataset.ageMode = newMode;
     } catch (e) {}
   }, []);
-
-  const toggleMode = useCallback(() => {
-    setMode(mode === 'kids' ? 'adult' : 'kids');
-  }, [mode, setMode]);
 
   const setRole = useCallback((newRole: UserRole) => {
     setRoleState(newRole);
@@ -164,18 +162,23 @@ export const AgeModeProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const isKids = mode === 'kids';
   const isAdult = mode === 'adult';
 
+  useEffect(() => {
+    if (role === 'educator' && activeTab !== 'home' && activeTab !== 'progress' && activeTab !== 'settings') {
+      setActiveTab('home');
+    }
+  }, [role, activeTab]);
+
   const signPlayerDefaults: SignPlayerDefaults = isKids
     ? { autoPlayLoop: true, defaultSpeed: 0.75, defaultMirror: true, largeFraming: true }
     : { autoPlayLoop: true, defaultSpeed: 1.0, defaultMirror: false, largeFraming: false };
 
-  const navItems = isKids ? KIDS_NAV : ADULT_NAV;
+  const navItems = role === 'educator' ? EDUCATOR_NAV : isKids ? KIDS_NAV : ADULT_NAV;
 
   return (
     <AgeModeContext.Provider
       value={{
         mode,
         setMode,
-        toggleMode,
         isKids,
         isAdult,
         role,

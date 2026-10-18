@@ -23,7 +23,7 @@ export const AdaptiveHeroCard: React.FC<AdaptiveHeroCardProps> = ({
   if (isKids) {
     return (
       <div
-        className={`bg-brand-yellow text-on-brand-yellow rounded-card border-adaptive pad-adaptive-control flex flex-col sm:flex-row items-center gap-5 shadow-low transition-all duration-base ${className}`}
+        className={`bg-brand-yellow text-on-brand-yellow rounded-card border-adaptive pad-adaptive-control flex flex-col items-center gap-5 shadow-low transition-all duration-base ${className}`}
       >
         <Avatar
           label="Friendly guide companion"
@@ -32,8 +32,8 @@ export const AdaptiveHeroCard: React.FC<AdaptiveHeroCardProps> = ({
           bgColor="bg-brand-pink text-on-brand-pink"
         />
 
-        <div className="flex-1 text-center sm:text-left">
-          <div className="flex items-center justify-center sm:justify-start gap-1.5 font-black text-caption-adaptive uppercase tracking-wider mb-1">
+        <div className="flex-1 text-center">
+          <div className="flex items-center justify-center gap-1.5 font-black text-caption-adaptive uppercase tracking-wider mb-1">
             <Sparkles className="w-4 h-4 text-brand-orange" aria-hidden="true" />
             <span>Talinturo Kids</span>
           </div>
@@ -47,7 +47,7 @@ export const AdaptiveHeroCard: React.FC<AdaptiveHeroCardProps> = ({
             <Button
               variant="primary"
               onClick={onStartPractice}
-              className="w-full sm:w-auto font-bold shadow-md"
+              className="w-full font-bold shadow-md"
             >
               <Play className="w-5 h-5 fill-current" aria-hidden="true" />
               <span>{t('hero.kids.cta')}</span>
@@ -62,7 +62,7 @@ export const AdaptiveHeroCard: React.FC<AdaptiveHeroCardProps> = ({
     <div
       className={`bg-surface-card text-text-primary rounded-card border-adaptive pad-adaptive-control shadow-low transition-all duration-base ${className}`}
     >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col gap-4">
         <div className="flex-1">
           <div className="text-caption-adaptive font-bold text-brand-blue uppercase tracking-wider mb-1">
             {t('hero.adult.title')}
@@ -84,7 +84,7 @@ export const AdaptiveHeroCard: React.FC<AdaptiveHeroCardProps> = ({
           <Button
             variant="primary"
             onClick={onStartPractice}
-            className="w-full sm:w-auto font-bold"
+            className="w-full font-bold"
           >
             <Play className="w-4 h-4 fill-current" aria-hidden="true" />
             <span>{t('hero.adult.cta')}</span>
